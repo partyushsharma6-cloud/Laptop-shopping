@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuxLap | Premium Laptops</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* ===== GLASS NAVBAR ===== */
+   .navbar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0); /* DARK GLASS */
+  backdrop-filter: blur(5px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Text color fix */
+.nav-links a {
+  color: #eee;
+}
+
+.nav-links a:hover {
+  color: #c9a45c;
+}
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 600;
+      color: #c9a45c;
+      letter-spacing: 2px;
+    }
+
+    .nav-links a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #222;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #c9a45c;
+    }
+
+    .btn-nav {
+      padding: 8px 18px;
+      border-radius: 20px;
+      background: linear-gradient(45deg, gold, #c9a45c);
+      color: #000 !important;
+      font-weight: 600;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1773332598451-8a0a59941912?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center/cover;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+   .hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0); /* DARK OVERLAY */
+}
+
+    .hero-content {
+      position: relative;
+      color: #fff;
+      text-align: center;
+      max-width: 700px;
+    }
+
+    .hero h1 {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      color: #ccc;
+      margin-bottom: 25px;
+    }
+
+    .btn-primary {
+      padding: 12px 30px;
+      border-radius: 30px;
+      background: linear-gradient(45deg, gold, #c9a45c);
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+    }
+
+    /* ===== CATEGORY CARDS ===== */
+    .category-card {
+      padding: 40px;
+      text-align: center;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .category-card:hover {
+      transform: translateY(-10px);
+    }
+
+    /* ===== BANNER ===== */
+    .banner {
+      margin: 80px 0;
+      padding: 100px 20px;
+      text-align: center;
+      background: linear-gradient(to right,#f8f5ef,#fff);
+    }
+
+    .banner h2 {
+      font-size: 34px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: #fff;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header class="navbar">
+  <div class="nav-wrapper">
+    <div class="logo">LuxLap</div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+      <a href="register.html" class="btn-nav">Register</a>
+    </nav>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Redefining Luxury Computing</h1>
+    <p>Experience power, elegance, and precision in every detail</p>
+    <a href="shop.html" class="btn-primary">Explore Collection</a>
+  </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section class="container" style="padding:80px 20px;">
+  <h2 class="section-title">Categories</h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
+    <div class="category-card">Gaming</div>
+    <div class="category-card">Business</div>
+    <div class="category-card">Student</div>
+    <div class="category-card">Premium</div>
+  </div>
+</section>
+
+<!-- ================= FEATURED PRODUCTS ================= -->
+<section class="products container">
+  <h2 class="section-title">Featured Laptops</h2>
+  <div id="products"></div>
+</section>
+
+<!-- ================= BANNER ================= -->
+<section class="banner">
+  <h2>Crafted for Professionals</h2>
+  <p>Ultra performance. Ultra design. Ultra luxury.</p>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <p>© 2026 LuxLap • Premium Laptop Store</p>
+</footer>
+
+<!-- ================= TOAST ================= -->
+<div id="toast" class="toast">Added to Cart</div>
+
+<!-- JS -->
+<script src="js/script.js"></script>
+<script> // SAME PRODUCTS AS SHOP (MUST MATCH IDs)
+const products = [
+{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D thinkpad"},
+{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"}
+];
+
+// LOAD FEATURED (ONLY FIRST 4 OR 6)
+function loadFeatured(){
+  const container = document.getElementById("products");
+
+  // show only latest 6
+  const featured = products.slice(0,6);
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
+      ${featured.map(p => `
+        <div class="product-card">
+          <img src="${p.img}">
+          <h3>${p.name}</h3>
+          <p>$${p.price}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+
+
+function addToCart(id){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  let existing = cart.find(item => item.id == id);
+
+  if(existing){
+    existing.qty += 1;
+  } else {
+    cart.push({id:id, qty:1});
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  showToast();
+}
+loadFeatured();</script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart | LuxLap</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #0f0f0f;
+  color: #eee;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+}
+.logo { font-size: 20px; }
+
+.nav-links a {
+  color: #ccc;
+  margin-left: 20px;
+  text-decoration: none;
+}
+.cart-count {
+  background: gold;
+  color: black;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* LAYOUT */
+.container { width: 90%; margin: auto; }
+h1 { text-align: center; }
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+.cart-item img { width: 90px; }
+
+.item-info { flex: 1; margin-left: 15px; }
+
+.item-controls {
+  display: flex;
+  gap: 10px;
+}
+.qty-btn {
+  background: #222;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.remove-btn {
+  color: red;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* SUMMARY */
+.cart-summary {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 12px;
+}
+.summary-row, .summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.summary-total {
+  border-top: 1px solid #444;
+  padding-top: 10px;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 12px;
+  background: gold;
+  border: none;
+  margin-top: 20px;
+}
+
+/* EMPTY */
+.hidden { display: none; }
+.empty { text-align: center; margin-top: 80px; }
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="logo">LuxLap</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart <span id="cartCount" class="cart-count">0</span></a>
+  </div>
+</div>
+
+<div class="container">
+<h1>Your Cart</h1>
+
+<div id="empty" class="empty hidden">
+  <h2>Your cart is empty</h2>
+</div>
+
+<div class="cart-layout">
+<div id="cartItems"></div>
+
+<div class="cart-summary">
+  <h2>Summary</h2>
+  <div class="summary-row">
+    <span>Subtotal</span>
+    <span id="subtotal">$0</span>
+  </div>
+  <div class="summary-total">
+    <span>Total</span>
+    <span id="total">$0</span>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+
+// 🔥 FULL 10 PRODUCTS (MUST MATCH SHOP PAGE)
+const products = [
+{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D thinkpad"},
+{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"}
+];
+
+// LOAD CART
+function loadCart(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // ✅ CLEAN INVALID DATA
+  cart = cart.filter(item => item.id && item.qty > 0);
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  let container = document.getElementById("cartItems");
+  let subtotal = 0;
+  container.innerHTML = "";
+
+  if(cart.length === 0){
+    document.getElementById("empty").classList.remove("hidden");
+    document.getElementById("cartCount").innerText = 0;
+    return;
+  }
+
+  cart.forEach(item => {
+    let product = products.find(p => p.id == item.id);
+    if(!product) return;
+
+    let qty = Number(item.qty) || 1;
+    let total = product.price * qty;
+    subtotal += total;
+
+    container.innerHTML += `
+      <div class="cart-item">
+        <img src="${product.img}">
+        <div class="item-info">
+          <h3>${product.name}</h3>
+          <p>$${product.price}</p>
+        </div>
+
+        <div class="item-controls">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+          <span>${qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+          <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
+        </div>
+
+        <div style="margin-left:10px;">$${total}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("subtotal").innerText = "$" + subtotal;
+  document.getElementById("total").innerText = "$" + subtotal;
+
+  updateCartCount();
+}
+
+// CART COUNT
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let count = cart.reduce((sum,i)=> sum + (Number(i.qty)||1),0);
+  document.getElementById("cartCount").innerText = count;
+}
+
+// CHANGE QTY (UNLIMITED)
+function changeQty(id, delta){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart = cart.map(item => {
+    if(item.id == id){
+      item.qty = Number(item.qty) || 1;
+      item.qty += delta;
+      if(item.qty < 1) item.qty = 1;
+    }
+    return item;
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// REMOVE
+function removeItem(id){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart = cart.filter(item => item.id != id);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// INIT
+loadCart();
+
+</script>
+
+</body>
+</html>

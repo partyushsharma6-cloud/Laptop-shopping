@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | LuxLap</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header class="navbar">
+  <div class="container nav-wrapper">
+    <div class="logo">LuxLap</div>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= PAGE HEADER ================= -->
+<section style="text-align:center; padding:60px 20px; background:linear-gradient(to right,#fff,#f5f5f5)">
+  <h1 style="font-size:42px; margin-bottom:10px;">Premium Laptop Collection</h1>
+  <p style="color:#777;">Discover high-performance machines crafted for excellence</p>
+</section>
+
+<!-- ================= FILTER BAR ================= -->
+<section class="container" style="display:flex;justify-content:space-between;align-items:center;margin:30px auto;">
+  <div>
+    <strong>Filter:</strong>
+    <select style="padding:8px;border-radius:6px;">
+      <option>All</option>
+      <option>Gaming</option>
+      <option>Business</option>
+      <option>Student</option>
+    </select>
+  </div>
+
+  <div>
+    <strong>Sort:</strong>
+    <select style="padding:8px;border-radius:6px;">
+      <option>Default</option>
+      <option>Price Low → High</option>
+      <option>Price High → Low</option>
+    </select>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="products container" id="products"></section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <p>© 2026 LuxLap. Premium Experience.</p>
+</footer>
+
+<!-- ================= JS ================= -->
+<script>
+const products = [
+{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D thinkpad"},
+{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
+{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"}
+];
+
+function renderProducts(){
+let container=document.getElementById("products");
+container.innerHTML=products.map(p=>`
+<div class="card">
+<img src="${p.img}">
+<div class="card-content">
+<h3>${p.name}</h3>
+<p class="price">$${p.price}</p>
+<button onclick="addToCart(${p.id})">Add to Cart</button>
+</div>
+</div>
+`).join("");
+}
+
+function addToCart(id){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let item=cart.find(i=>i.id===id);
+if(item){item.qty++}else{cart.push({id,qty:1})}
+localStorage.setItem("cart",JSON.stringify(cart));
+showToast("Added to cart");
+}
+
+function showToast(msg){
+let toast=document.createElement("div");
+toast.innerText=msg;
+toast.className="toast show";
+document.body.appendChild(toast);
+setTimeout(()=>toast.remove(),2000);
+}
+
+renderProducts();
+</script>
+
+</body>
+</html>
