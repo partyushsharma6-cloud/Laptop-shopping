@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <style>
     /* ===== GLASS NAVBAR ===== */
@@ -157,6 +157,42 @@
       background: #fff;
       color: #777;
     }
+    /* ===== MOBILE NAV ===== */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #c9a45c;
+}
+
+/* Hide nav-links on mobile by default */
+@media screen and (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background: rgba(0,0,0,0.95);
+    width: 200px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    display: none;
+    border-radius: 0 0 0 10px;
+  }
+
+  .nav-links a {
+    margin: 15px 0;
+    color: #fff;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
   </style>
 </head>
 
@@ -221,7 +257,7 @@
 <div id="toast" class="toast">Added to Cart</div>
 
 <!-- JS -->
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 <script> // SAME PRODUCTS AS SHOP (MUST MATCH IDs)
 const products = [
 {id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
@@ -274,7 +310,12 @@ function addToCart(id){
 
   showToast();
 }
-loadFeatured();</script>
+loadFeatured();
+function toggleMenu() {
+  const nav = document.getElementById("navLinks");
+  nav.classList.toggle("active");
+}
+</script>
 
 </body>
 
