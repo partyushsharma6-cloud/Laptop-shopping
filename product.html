@@ -3,13 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luxury Laptops | LuxLap</title>
+  <title>Product Details | LuxLap</title>
 
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .product-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .product-container img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    .product-info h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .product-info h2 {
+      color: #c9a45c;
+      margin-bottom: 20px;
+    }
+
+    .product-info p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .product-info ul {
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    .product-info button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(45deg, gold, #c9a45c);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* MOBILE */
+    @media(max-width:768px){
+      .product-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -20,164 +71,16 @@
     <div class="logo">LuxLap</div>
     <nav class="nav-links">
       <a href="index.html">Home</a>
-      <a href="shop.html" class="active">Shop</a>
+      <a href="shop.html">Shop</a>
       <a href="cart.html">Cart</a>
       <a href="login.html">Login</a>
     </nav>
   </div>
 </header>
 
-<!-- TITLE -->
+<!-- PRODUCT DETAIL -->
 <section class="container">
-  <h1 class="section-title">Premium Laptop Collection</h1>
-</section>
-
-<!-- PRODUCTS -->
-<section class="products container">
-  <div class="product-grid">
-
-    <!-- PRODUCT CARD -->
-    <div class="card">
-      <img src="images/l1.jpg">
-      <h3>MacBook Pro M3</h3>
-      <p>₹2,10,000</p>
-      <button onclick="addToCart('MacBook Pro M3',210000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l2.jpg">
-      <h3>Dell XPS 15</h3>
-      <p>₹1,70,000</p>
-      <button onclick="addToCart('Dell XPS 15',170000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l3.jpg">
-      <h3>HP Spectre x360</h3>
-      <p>₹1,60,000</p>
-      <button onclick="addToCart('HP Spectre x360',160000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l4.jpg">
-      <h3>Lenovo ThinkPad X1</h3>
-      <p>₹1,80,000</p>
-      <button onclick="addToCart('ThinkPad X1',180000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l5.jpg">
-      <h3>Asus ROG Zephyrus</h3>
-      <p>₹1,90,000</p>
-      <button onclick="addToCart('ROG Zephyrus',190000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l6.jpg">
-      <h3>Razer Blade 15</h3>
-      <p>₹2,20,000</p>
-      <button onclick="addToCart('Razer Blade 15',220000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l7.jpg">
-      <h3>MSI Stealth 16</h3>
-      <p>₹1,75,000</p>
-      <button onclick="addToCart('MSI Stealth 16',175000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l8.jpg">
-      <h3>Acer Predator Triton</h3>
-      <p>₹1,65,000</p>
-      <button onclick="addToCart('Predator Triton',165000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l9.jpg">
-      <h3>MacBook Air M2</h3>
-      <p>₹1,20,000</p>
-      <button onclick="addToCart('MacBook Air M2',120000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l10.jpg">
-      <h3>Dell Inspiron 14</h3>
-      <p>₹85,000</p>
-      <button onclick="addToCart('Dell Inspiron 14',85000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l11.jpg">
-      <h3>HP Pavilion Plus</h3>
-      <p>₹95,000</p>
-      <button onclick="addToCart('HP Pavilion Plus',95000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l12.jpg">
-      <h3>Lenovo Yoga Slim</h3>
-      <p>₹1,10,000</p>
-      <button onclick="addToCart('Yoga Slim',110000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l13.jpg">
-      <h3>Asus ZenBook 14</h3>
-      <p>₹1,05,000</p>
-      <button onclick="addToCart('ZenBook 14',105000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l14.jpg">
-      <h3>LG Gram 17</h3>
-      <p>₹1,50,000</p>
-      <button onclick="addToCart('LG Gram 17',150000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l15.jpg">
-      <h3>Samsung Galaxy Book</h3>
-      <p>₹1,25,000</p>
-      <button onclick="addToCart('Galaxy Book',125000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l16.jpg">
-      <h3>Surface Laptop 5</h3>
-      <p>₹1,45,000</p>
-      <button onclick="addToCart('Surface Laptop 5',145000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l17.jpg">
-      <h3>Acer Swift X</h3>
-      <p>₹90,000</p>
-      <button onclick="addToCart('Swift X',90000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l18.jpg">
-      <h3>HP Omen 16</h3>
-      <p>₹1,40,000</p>
-      <button onclick="addToCart('HP Omen 16',140000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l19.jpg">
-      <h3>Dell Alienware X14</h3>
-      <p>₹2,30,000</p>
-      <button onclick="addToCart('Alienware X14',230000)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="images/l20.jpg">
-      <h3>Asus Vivobook Pro</h3>
-      <p>₹80,000</p>
-      <button onclick="addToCart('Vivobook Pro',80000)">Add to Cart</button>
-    </div>
-
-  </div>
+  <div id="productDetail"></div>
 </section>
 
 <!-- FOOTER -->
@@ -185,7 +88,77 @@
   <p>© 2026 LuxLap • Premium Laptop Store</p>
 </footer>
 
-<script src="script.js"></script>
+<!-- JS -->
+<script>
+
+// SAME PRODUCTS AS SHOP (IMPORTANT)
+const products = [
+{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop"},
+{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332&auto=format&fit=crop"},
+{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170&auto=format&fit=crop"},
+{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop"},
+{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop"},
+{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715&auto=format&fit=crop"},
+{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074&auto=format&fit=crop"},
+{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332&auto=format&fit=crop"},
+{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687&auto=format&fit=crop"},
+{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170&auto=format&fit=crop"}
+];
+
+// GET SELECTED PRODUCT
+const id = localStorage.getItem("selectedProduct");
+const product = products.find(p => p.id == id);
+
+const container = document.getElementById("productDetail");
+
+// IF PRODUCT FOUND
+if(product){
+container.innerHTML = `
+<div class="product-container">
+
+  <img src="${product.img}">
+
+  <div class="product-info">
+    <h1>${product.name}</h1>
+    <h2>₹${product.price}</h2>
+
+    <p>
+      Experience premium performance with cutting-edge technology,
+      sleek design, and long-lasting durability.
+    </p>
+
+    <ul>
+      <li>✔ High-speed processor</li>
+      <li>✔ Premium metal build</li>
+      <li>✔ Long battery backup</li>
+      <li>✔ Ultra-slim & lightweight</li>
+    </ul>
+
+    <button onclick="addToCart(${product.id})">Add to Cart</button>
+  </div>
+
+</div>
+`;
+} else {
+container.innerHTML = "<h2 style='text-align:center;'>Product not found</h2>";
+}
+
+// ADD TO CART
+function addToCart(id){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let item=cart.find(i=>i.id===id);
+
+if(item){
+  item.qty++;
+} else {
+  cart.push({id,qty:1});
+}
+
+localStorage.setItem("cart",JSON.stringify(cart));
+alert("Added to Cart");
+}
+
+</script>
 
 </body>
 </html>
