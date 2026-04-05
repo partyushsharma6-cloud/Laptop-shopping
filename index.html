@@ -258,43 +258,51 @@
 
 <!-- JS -->
 <script src="script.js"></script>
-<script> // SAME PRODUCTS AS SHOP (MUST MATCH IDs)
+<script>
+// ================= PRODUCTS =================
 const products = [
-{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D thinkpad"},
-{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"},
-{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D laptop"}
+{id:1,name:"MacBook Pro M3",price:3200,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1026"},
+{id:2,name:"Dell XPS 15",price:2800,img:"https://images.unsplash.com/photo-1558864559-ed673ba3610b?q=80&w=1332"},
+{id:3,name:"HP Spectre x360",price:2500,img:"https://images.unsplash.com/photo-1554246247-6993b606e8b9?q=80&w=1170"},
+{id:4,name:"Asus ROG Zephyrus",price:3000,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687"},
+{id:5,name:"Lenovo ThinkPad X1",price:2700,img:"https://images.unsplash.com/photo-1636211990414-8edec17ba047?q=80&w=687"},
+{id:6,name:"Razer Blade 16",price:3500,img:"https://images.unsplash.com/photo-1694233292914-ce80c196ffcc?q=80&w=715"},
+{id:7,name:"Acer Predator Helios",price:2200,img:"https://images.unsplash.com/photo-1693596936248-8fab255a3de1?q=80&w=1074"},
+{id:8,name:"Microsoft Surface Laptop",price:2100,img:"https://images.unsplash.com/photo-1669698158680-522e6574c8ed?q=80&w=1332"},
+{id:9,name:"Samsung Galaxy Book",price:2000,img:"https://images.unsplash.com/photo-1636211992838-251a43d72ad2?q=80&w=687"},
+{id:10,name:"LG Gram Ultra",price:2300,img:"https://images.unsplash.com/photo-1572985919466-6d00864965c8?q=80&w=1170"}
 ];
 
-// LOAD FEATURED (ONLY FIRST 4 OR 6)
+// ================= LOAD FEATURED =================
 function loadFeatured(){
   const container = document.getElementById("products");
 
-  // show only latest 6
   const featured = products.slice(0,6);
 
   container.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
       ${featured.map(p => `
-        <div class="product-card">
+        <div class="product-card" onclick="openProduct(${p.id})" style="cursor:pointer;">
           <img src="${p.img}">
           <h3>${p.name}</h3>
           <p>$${p.price}</p>
-          <button onclick="addToCart(${p.id})">Add to Cart</button>
+
+          <button onclick="event.stopPropagation(); addToCart(${p.id})">
+            Add to Cart
+          </button>
         </div>
       `).join("")}
     </div>
   `;
 }
 
+// ================= OPEN PRODUCT =================
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
+  window.location.href = "product.html";
+}
 
-
+// ================= CART =================
 function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -310,11 +318,25 @@ function addToCart(id){
 
   showToast();
 }
-loadFeatured();
+
+// ================= TOAST =================
+function showToast(){
+  const toast = document.getElementById("toast");
+  toast.style.display = "block";
+
+  setTimeout(()=>{
+    toast.style.display = "none";
+  },2000);
+}
+
+// ================= MOBILE MENU =================
 function toggleMenu() {
   const nav = document.getElementById("navLinks");
   nav.classList.toggle("active");
 }
+
+// INIT
+loadFeatured();
 </script>
 
 </body>
