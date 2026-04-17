@@ -2,168 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Product | LuxLap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details | LuxLap</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
 
   <style>
-    .product-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-      padding: 60px 20px;
+    body { font-family: Poppins, sans-serif; margin:0; }
+    .container { width:90%; margin:auto; }
+    .center { text-align:center; padding:80px; }
+
+    .product {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:40px;
+      padding:60px 0;
     }
 
-    .product-container img {
-      width: 100%;
-      border-radius: 12px;
-    }
+    img { width:100%; border-radius:10px; }
 
-    .product-info h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .product-info h2 {
-      color: #c9a45c;
-      margin-bottom: 20px;
-    }
-
-    .product-info p {
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .product-info ul {
-      margin-bottom: 20px;
-      color: #444;
-    }
-
-    .product-info button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 25px;
-      background: linear-gradient(45deg, gold, #c9a45c);
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .center-msg {
-      text-align: center;
-      padding: 80px;
-      font-size: 20px;
-    }
-
-    @media(max-width:768px){
-      .product-container {
-        grid-template-columns: 1fr;
-      }
+    button {
+      padding:12px 20px;
+      background:gold;
+      border:none;
+      cursor:pointer;
+      border-radius:20px;
     }
   </style>
 </head>
 
 <body>
 
-<header class="navbar">
-  <div class="container nav-wrapper">
-    <div class="logo">LuxLap</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="cart.html">Cart</a>
-      <a href="login.html">Login</a>
-    </nav>
-  </div>
-</header>
+<div class="container">
+  <div id="product" class="center">Loading product...</div>
+</div>
 
-<section class="container">
-  <div id="productDetail" class="center-msg">Loading product...</div>
-</section>
-
-<footer class="footer">
-  <p>© 2026 LuxLap • Premium Laptop Store</p>
-</footer>
-
+<!-- ONLY ONE SUPABASE SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// ✅ SUPABASE SETUP
-const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
+// 🔥 ONLY ONE CLIENT (IMPORTANT)
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ✅ GET ID
+const id = parseInt(localStorage.getItem("selectedProduct"));
+console.log("ID:", id);
 
-// ✅ GET PRODUCT ID (SAFE)
-const product_id = parseInt(localStorage.getItem("selectedProduct"));
+// ✅ LOAD
+async function load(){
+  const container = document.getElementById("product");
 
-console.log("Selected Product ID:", product_id);
-
-// ✅ LOAD PRODUCT
-async function loadProduct() {
-  const container = document.getElementById("productDetail");
-
-  if (!product_id || isNaN(product_id)) {
-    container.innerHTML = "<div class='center-msg'>No product selected</div>";
+  if(!id){
+    container.innerHTML = "No product selected";
     return;
   }
 
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .eq("product_id", product_id)
-    .single(); // 🔥 important
+    .eq("product_id", id)
+    .single();
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+  console.log(data, error);
 
-  if (error || !data) {
-    container.innerHTML = "<div class='center-msg'>Product not found</div>";
+  if(error || !data){
+    container.innerHTML = "Product not found";
     return;
   }
 
-  container.classList.remove("center-msg");
+  container.classList.remove("center");
 
   container.innerHTML = `
-    <div class="product-container">
-      <img src="${data.image}" alt="${data.name}">
-      
-      <div class="product-info">
+    <div class="product">
+      <img src="${data.image}">
+      <div>
         <h1>${data.name}</h1>
         <h2>$${data.price}</h2>
-
-        <p>Premium performance laptop with high-end build quality.</p>
-
-        <ul>
-          <li>✔ High-speed processor</li>
-          <li>✔ Premium metal build</li>
-          <li>✔ Long battery backup</li>
-          <li>✔ Ultra-slim & lightweight</li>
-        </ul>
-
-        <button onclick="addToCart(${data.product_id})">Add to Cart</button>
+        <button onclick="add(${data.product_id})">Add to Cart</button>
       </div>
     </div>
   `;
 }
 
-// ✅ ADD TO CART (CONSISTENT)
-function addToCart(product_id){
+// CART
+function add(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
   let item = cart.find(i => i.product_id === product_id);
 
   if(item) item.qty++;
   else cart.push({ product_id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Added to Cart");
+  alert("Added");
 }
 
-// ✅ INIT
-loadProduct();
+load();
 </script>
 
 </body>
