@@ -75,7 +75,7 @@ button {
   <div id="products">Loading products...</div>
 </section>
 
-<!-- ✅ SUPABASE -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -84,10 +84,8 @@ const supabase = window.supabase.createClient(
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
 
-// 🚀 LOAD PRODUCTS
+// LOAD PRODUCTS
 async function loadProducts() {
-  console.log("Loading products...");
-
   const { data, error } = await supabase
     .from("products")
     .select("*");
@@ -96,29 +94,27 @@ async function loadProducts() {
   console.log("ERROR:", error);
 
   if (error) {
-    document.getElementById("products").innerHTML = "❌ Error loading products";
+    document.getElementById("products").innerHTML = "Error loading products";
     return;
   }
 
   if (!data || data.length === 0) {
-    document.getElementById("products").innerHTML = "⚠️ No products found";
+    document.getElementById("products").innerHTML = "No products found";
     return;
   }
 
   renderProducts(data);
 }
 
-// 🎨 RENDER
+// RENDER
 function renderProducts(products){
   const container = document.getElementById("products");
 
   container.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
       ${products.map(p => {
-
-        // 🔥 HANDLE BOTH POSSIBLE COLUMN NAMES
-        const id = p.product_id || p.id;
-        const image = p.image || p.img;
+        const id = p.id;            // ✅ FIXED
+        const image = p.image;
 
         return `
           <div class="card" onclick="openProduct(${id})">
@@ -136,20 +132,20 @@ function renderProducts(products){
   `;
 }
 
-// 🔗 OPEN PRODUCT
+// OPEN PRODUCT
 function openProduct(id){
   localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-// 🛒 CART
-function addToCart(product_id){
+// CART (FIXED)
+function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.product_id === product_id);
+  let item = cart.find(i => i.id === id);   // ✅ FIXED
 
   if(item) item.qty++;
-  else cart.push({ product_id, qty:1 });
+  else cart.push({ id, qty:1 });           // ✅ FIXED
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to Cart");
