@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details | LuxLap</title>
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -64,7 +61,6 @@
 
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="container nav-wrapper">
     <div class="logo">LuxLap</div>
@@ -77,12 +73,10 @@
   </div>
 </header>
 
-<!-- PRODUCT DETAIL -->
 <section class="container">
   <div id="productDetail"></div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   <p>© 2026 LuxLap • Premium Laptop Store</p>
 </footer>
@@ -96,15 +90,15 @@ const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ================= GET ID =================
-const id = Number(localStorage.getItem("selectedProduct"));
-console.log("Selected Product ID:", id);
+// ================= GET PRODUCT ID =================
+const product_id = Number(localStorage.getItem("selectedProduct"));
+console.log("Selected Product ID:", product_id);
 
 // ================= LOAD PRODUCT =================
 async function loadProduct() {
   const container = document.getElementById("productDetail");
 
-  if (!id) {
+  if (!product_id) {
     container.innerHTML = "<h2 style='text-align:center;'>No product selected</h2>";
     return;
   }
@@ -112,7 +106,7 @@ async function loadProduct() {
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .eq("id", id)
+    .eq("product_id", product_id)
     .maybeSingle();
 
   console.log("DATA:", data);
@@ -140,19 +134,20 @@ async function loadProduct() {
           <li>✔ Ultra-slim & lightweight</li>
         </ul>
 
-        <button onclick="addToCart(${data.id})">Add to Cart</button>
+        <button onclick="addToCart(${data.product_id})">Add to Cart</button>
       </div>
     </div>
   `;
 }
 
 // ================= CART =================
-function addToCart(id){
+function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let item = cart.find(i => i.id === id);
+
+  let item = cart.find(i => i.product_id === product_id);
 
   if(item) item.qty++;
-  else cart.push({id, qty:1});
+  else cart.push({ product_id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to Cart");
