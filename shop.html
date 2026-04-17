@@ -6,107 +6,156 @@
   <title>Shop | LuxLap</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body { font-family: Poppins, sans-serif; margin:0; }
+
+    .container { width:90%; margin:auto; }
+
+    .navbar {
+      padding:15px 40px;
+      display:flex;
+      justify-content:space-between;
+      background:#fff;
+      border-bottom:1px solid #eee;
+    }
+
+    .logo { color:#c9a45c; font-weight:600; }
+
+    .nav-links a {
+      margin-left:20px;
+      text-decoration:none;
+      color:#333;
+    }
+
+    .card {
+      background:#fff;
+      padding:15px;
+      border-radius:10px;
+      text-align:center;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    .card:hover {
+      transform:translateY(-5px);
+    }
+
+    .card img {
+      width:100%;
+      border-radius:10px;
+    }
+
+    .price {
+      color:#c9a45c;
+      font-weight:600;
+    }
+
+    button {
+      padding:8px 15px;
+      border:none;
+      background:gold;
+      cursor:pointer;
+      border-radius:20px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
-  <div class="container nav-wrapper">
-    <div class="logo">LuxLap</div>
+  <div class="logo">LuxLap</div>
 
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="cart.html">Cart</a>
-      <a href="login.html">Login</a>
-    </nav>
-  </div>
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </nav>
 </header>
 
-<!-- HEADER -->
-<section style="text-align:center; padding:60px 20px; background:linear-gradient(to right,#fff,#f5f5f5)">
-  <h1 style="font-size:42px; margin-bottom:10px;">Premium Laptop Collection</h1>
-  <p style="color:#777;">Discover high-performance machines crafted for excellence</p>
+<section style="text-align:center; padding:60px 20px;">
+  <h1>Premium Laptop Collection</h1>
+  <p>Discover high-performance machines</p>
 </section>
 
-<!-- PRODUCTS -->
-<section class="products container" id="products"></section>
+<section class="container">
+  <div id="products">Loading products...</div>
+</section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <p>© 2026 LuxLap. Premium Experience.</p>
+<footer style="text-align:center; padding:20px;">
+  © 2026 LuxLap
 </footer>
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// ✅ Supabase config
-const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ✅ Load products
+// LOAD PRODUCTS
 async function loadProducts() {
-  const { data, error } = await supabaseClient
+  const { data, error } = await supabase
     .from("products")
     .select("*");
 
   if (error) {
-    console.error("Supabase error:", error);
+    console.error(error);
+    document.getElementById("products").innerHTML = "Error loading products";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    document.getElementById("products").innerHTML = "No products found";
     return;
   }
 
   renderProducts(data);
 }
 
-// ✅ Render products
+// RENDER
 function renderProducts(products){
-  let container = document.getElementById("products");
+  const container = document.getElementById("products");
 
   container.innerHTML = `
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
-    ${products.map(p=>`
-      <div class="card" onclick="openProduct(${p.product_id})" style="cursor:pointer;">
-        <img src="${p.image}" alt="${p.name}">
-        <div class="card-content">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+      ${products.map(p => `
+        <div class="card" onclick="openProduct(${p.product_id})">
+          <img src="${p.image}" alt="${p.name}">
           <h3>${p.name}</h3>
           <p class="price">$${p.price}</p>
+
           <button onclick="event.stopPropagation(); addToCart(${p.product_id})">
             Add to Cart
           </button>
         </div>
-      </div>
-    `).join("")}
-  </div>
+      `).join("")}
+    </div>
   `;
 }
 
-// ✅ Open product page
-function openProduct(product_id){
-  localStorage.setItem("selectedProduct", product_id);
+// OPEN PRODUCT
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-// ✅ Add to cart (FIXED STRUCTURE)
+// ADD TO CART
 function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   let item = cart.find(i => i.product_id === product_id);
 
-  if(item){
-    item.qty++;
-  } else {
-    cart.push({ product_id, qty:1 });
-  }
+  if(item) item.qty++;
+  else cart.push({ product_id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to Cart");
 }
 
-// ✅ Init
+// INIT
 loadProducts();
 </script>
 
