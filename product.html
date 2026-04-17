@@ -87,41 +87,49 @@
   <p>© 2026 LuxLap • Premium Laptop Store</p>
 </footer>
 
-<!-- ✅ SUPABASE -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// ✅ Supabase Setup
+// ================= SETUP =================
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 GET SELECTED PRODUCT ID
+// ================= GET ID =================
 const id = Number(localStorage.getItem("selectedProduct"));
+console.log("Selected Product ID:", id);
 
-// 🚀 LOAD PRODUCT FROM DATABASE
+// ================= LOAD PRODUCT =================
 async function loadProduct() {
+  const container = document.getElementById("productDetail");
+
+  // ❌ If user opened page directly
+  if (!id) {
+    container.innerHTML = "<h2 style='text-align:center;'>No product selected</h2>";
+    return;
+  }
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
-  const container = document.getElementById("productDetail");
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-  if (error || !data) {
+  if (!data) {
     container.innerHTML = "<h2 style='text-align:center;'>Product not found</h2>";
-    console.error(error);
     return;
   }
 
-  // ✅ RENDER PRODUCT
+  // ✅ RENDER
   container.innerHTML = `
     <div class="product-container">
-
-      <img src="${data.image}">
-
+      <img src="${data.image}" alt="${data.name}">
+      
       <div class="product-info">
         <h1>${data.name}</h1>
         <h2>₹${data.price}</h2>
@@ -140,12 +148,11 @@ async function loadProduct() {
 
         <button onclick="addToCart(${data.id})">Add to Cart</button>
       </div>
-
     </div>
   `;
 }
 
-// 🛒 CART
+// ================= CART =================
 function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   let item = cart.find(i => i.id === id);
@@ -157,7 +164,7 @@ function addToCart(id){
   alert("Added to Cart");
 }
 
-// 🚀 INIT
+// ================= INIT =================
 loadProduct();
 </script>
 
