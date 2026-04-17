@@ -147,7 +147,6 @@ button {
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -160,9 +159,6 @@ async function loadProducts() {
   const { data, error } = await supabase
     .from("products")
     .select("*");
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
 
   if (error) {
     document.getElementById("products").innerHTML = "Error loading";
@@ -183,21 +179,16 @@ function renderProducts(products) {
 
   container.innerHTML = `
     <div class="grid">
-      ${products.map(p => {
-        const id = p.id;          // ✅ FIXED
-        const image = p.image;
-
-        return `
-          <div class="card" onclick="openProduct(${id})">
-            <img src="${image}">
-            <h3>${p.name}</h3>
-            <p class="price">$${p.price}</p>
-            <button onclick="event.stopPropagation(); addToCart(${id})">
-              Add
-            </button>
-          </div>
-        `;
-      }).join("")}
+      ${products.map(p => `
+        <div class="card" onclick="openProduct(${p.id})">
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+          <p class="price">$${p.price}</p>
+          <button onclick="event.stopPropagation(); addToCart(${p.id})">
+            Add
+          </button>
+        </div>
+      `).join("")}
     </div>
   `;
 }
@@ -208,14 +199,14 @@ function openProduct(id){
   window.location.href = "product.html";
 }
 
-// CART (FIXED)
+// CART
 function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.id === id);   // ✅ FIXED
+  let item = cart.find(i => i.id === id);
 
   if(item) item.qty++;
-  else cart.push({ id, qty:1 });           // ✅ FIXED
+  else cart.push({ id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
