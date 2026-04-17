@@ -7,6 +7,27 @@
 
   <style>
     body { font-family: Poppins, sans-serif; margin:0; }
+
+    /* NAVBAR */
+    .navbar {
+      display:flex;
+      justify-content:space-between;
+      padding:15px 40px;
+      background:#fff;
+      border-bottom:1px solid #eee;
+    }
+
+    .logo {
+      font-weight:600;
+      color:#c9a45c;
+    }
+
+    .nav-links a {
+      margin-left:20px;
+      text-decoration:none;
+      color:#333;
+    }
+
     .container { width:90%; margin:auto; }
     .center { text-align:center; padding:80px; }
 
@@ -15,6 +36,7 @@
       grid-template-columns:1fr 1fr;
       gap:40px;
       padding:60px 0;
+      align-items:center;
     }
 
     img { width:100%; border-radius:10px; }
@@ -26,10 +48,24 @@
       cursor:pointer;
       border-radius:20px;
     }
+
+    @media(max-width:768px){
+      .product { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 
 <body>
+
+<!-- ✅ NAVBAR -->
+<div class="navbar">
+  <div class="logo">LuxLap</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</div>
 
 <div class="container">
   <div id="product" class="center">Loading product...</div>
@@ -39,8 +75,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// ✅ use DIFFERENT name to avoid duplicate conflict
-const sb = window.supabase.createClient(
+// ⚠️ IMPORTANT: use UNIQUE variable name
+const db = window.supabase.createClient(
   "https://xopxvrmmzanowgpyvolv.supabase.co",
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
@@ -53,12 +89,12 @@ console.log("Selected ID:", id);
 async function load(){
   const container = document.getElementById("product");
 
-  if(!id){
+  if(!id || isNaN(id)){
     container.innerHTML = "No product selected";
     return;
   }
 
-  const { data, error } = await sb
+  const { data, error } = await db
     .from("products")
     .select("*")
     .eq("product_id", id)
