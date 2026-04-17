@@ -77,9 +77,9 @@ button {
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>  
 
 <script>
+// ✅ Supabase (ONLY HERE)
 const supabase = window.supabase.createClient(
   "https://xopxvrmmzanowgpyvolv.supabase.co",
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
@@ -114,7 +114,7 @@ function renderProducts(products){
   container.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
       ${products.map(p => {
-        const id = p.id;            // ✅ FIXED
+        const id = p.id;
         const image = p.image;
 
         return `
@@ -139,14 +139,14 @@ function openProduct(id){
   window.location.href = "product.html";
 }
 
-// CART (FIXED)
+// CART
 function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.id === id);   // ✅ FIXED
+  let item = cart.find(i => i.id === id);
 
   if(item) item.qty++;
-  else cart.push({ id, qty:1 });           // ✅ FIXED
+  else cart.push({ id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to Cart");
