@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* ===== GLASS NAVBAR ===== */
     .navbar {
       position: fixed;
       width: 100%;
@@ -196,25 +195,25 @@ async function loadProducts() {
     .select("*");
 
   if (error) {
-    console.error(error);
+    console.error("Supabase error:", error);
     return;
   }
 
   renderProducts(data);
 }
 
-// RENDER
+// RENDER PRODUCTS
 function renderProducts(products) {
   const container = document.getElementById("products");
 
   container.innerHTML = `
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
     ${products.map(p => `
-      <div class="card" onclick="openProduct(${p.id})">
-        <img src="${p.image}">
+      <div class="card" onclick="openProduct(${p.product_id})">
+        <img src="${p.image}" alt="${p.name}">
         <h3>${p.name}</h3>
         <p>$${p.price}</p>
-        <button onclick="event.stopPropagation(); addToCart(${p.id})">Add</button>
+        <button onclick="event.stopPropagation(); addToCart(${p.product_id})">Add</button>
       </div>
     `).join("")}
   </div>
@@ -222,18 +221,19 @@ function renderProducts(products) {
 }
 
 // OPEN PRODUCT
-function openProduct(id){
-  localStorage.setItem("selectedProduct", id);
+function openProduct(product_id){
+  localStorage.setItem("selectedProduct", product_id);
   window.location.href = "product.html";
 }
 
-// CART
-function addToCart(id){
+// ADD TO CART (FIXED STRUCTURE)
+function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let item = cart.find(i => i.id === id);
+
+  let item = cart.find(i => i.product_id === product_id);
 
   if(item) item.qty++;
-  else cart.push({id, qty:1});
+  else cart.push({ product_id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
