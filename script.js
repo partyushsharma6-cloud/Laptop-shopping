@@ -43,6 +43,11 @@ function renderProducts() {
   `).join("");
 }
 
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
+  window.location.href = "product.html";
+}
+
 // 🛒 Cart
 function addToCart(id) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
