@@ -30,12 +30,14 @@ function renderProducts() {
   if (!container) return;
 
   container.innerHTML = products.map(p => `
-    <div class="card">
+    <div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
       <img src="${p.image}">
       <div class="card-content">
         <h3>${p.name}</h3>
         <p class="price">$${p.price}</p>
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
+        <button onclick="event.stopPropagation(); addToCart(${p.id})">
+          Add to Cart
+        </button>
       </div>
     </div>
   `).join("");
