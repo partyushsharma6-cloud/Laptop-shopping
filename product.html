@@ -87,7 +87,6 @@
   <p>© 2026 LuxLap • Premium Laptop Store</p>
 </footer>
 
-<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
@@ -105,7 +104,6 @@ console.log("Selected Product ID:", id);
 async function loadProduct() {
   const container = document.getElementById("productDetail");
 
-  // ❌ If user opened page directly
   if (!id) {
     container.innerHTML = "<h2 style='text-align:center;'>No product selected</h2>";
     return;
@@ -125,7 +123,6 @@ async function loadProduct() {
     return;
   }
 
-  // ✅ RENDER
   container.innerHTML = `
     <div class="product-container">
       <img src="${data.image}" alt="${data.name}">
@@ -134,10 +131,7 @@ async function loadProduct() {
         <h1>${data.name}</h1>
         <h2>₹${data.price}</h2>
 
-        <p>
-          Experience premium performance with cutting-edge technology,
-          sleek design, and long-lasting durability.
-        </p>
+        <p>Premium performance laptop with high-end build quality.</p>
 
         <ul>
           <li>✔ High-speed processor</li>
