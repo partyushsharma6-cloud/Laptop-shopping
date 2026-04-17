@@ -1,71 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop | LuxLap</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop | LuxLap</title>
 
-  <link rel="stylesheet" href="style.css">
+<style>
+body { font-family: Poppins, sans-serif; margin:0; }
+.container { width:90%; margin:auto; }
 
-  <style>
-    body { font-family: Poppins, sans-serif; margin:0; }
+.navbar {
+  padding:15px 40px;
+  display:flex;
+  justify-content:space-between;
+  background:#fff;
+  border-bottom:1px solid #eee;
+}
 
-    .container { width:90%; margin:auto; }
+.logo { color:#c9a45c; font-weight:600; }
 
-    .navbar {
-      padding:15px 40px;
-      display:flex;
-      justify-content:space-between;
-      background:#fff;
-      border-bottom:1px solid #eee;
-    }
+.nav-links a {
+  margin-left:20px;
+  text-decoration:none;
+  color:#333;
+}
 
-    .logo { color:#c9a45c; font-weight:600; }
+.card {
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.2s;
+}
 
-    .nav-links a {
-      margin-left:20px;
-      text-decoration:none;
-      color:#333;
-    }
+.card:hover { transform:translateY(-5px); }
 
-    .card {
-      background:#fff;
-      padding:15px;
-      border-radius:10px;
-      text-align:center;
-      cursor:pointer;
-      transition:0.2s;
-    }
+.card img {
+  width:100%;
+  border-radius:10px;
+}
 
-    .card:hover {
-      transform:translateY(-5px);
-    }
+.price {
+  color:#c9a45c;
+  font-weight:600;
+}
 
-    .card img {
-      width:100%;
-      border-radius:10px;
-    }
-
-    .price {
-      color:#c9a45c;
-      font-weight:600;
-    }
-
-    button {
-      padding:8px 15px;
-      border:none;
-      background:gold;
-      cursor:pointer;
-      border-radius:20px;
-    }
-  </style>
+button {
+  padding:8px 15px;
+  border:none;
+  background:gold;
+  cursor:pointer;
+  border-radius:20px;
+}
+</style>
 </head>
 
 <body>
 
 <header class="navbar">
   <div class="logo">LuxLap</div>
-
   <nav class="nav-links">
     <a href="index.html">Home</a>
     <a href="shop.html">Shop</a>
@@ -75,19 +69,14 @@
 
 <section style="text-align:center; padding:60px 20px;">
   <h1>Premium Laptop Collection</h1>
-  <p>Discover high-performance machines</p>
 </section>
 
 <section class="container">
   <div id="products">Loading products...</div>
 </section>
 
-<footer style="text-align:center; padding:20px;">
-  © 2026 LuxLap
-</footer>
-
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- ✅ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -95,54 +84,65 @@ const supabase = window.supabase.createClient(
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
 
-// LOAD PRODUCTS
+// 🚀 LOAD PRODUCTS
 async function loadProducts() {
+  console.log("Loading products...");
+
   const { data, error } = await supabase
     .from("products")
     .select("*");
 
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
   if (error) {
-    console.error(error);
-    document.getElementById("products").innerHTML = "Error loading products";
+    document.getElementById("products").innerHTML = "❌ Error loading products";
     return;
   }
 
   if (!data || data.length === 0) {
-    document.getElementById("products").innerHTML = "No products found";
+    document.getElementById("products").innerHTML = "⚠️ No products found";
     return;
   }
 
   renderProducts(data);
 }
 
-// RENDER
+// 🎨 RENDER
 function renderProducts(products){
   const container = document.getElementById("products");
 
   container.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
-      ${products.map(p => `
-        <div class="card" onclick="openProduct(${p.product_id})">
-          <img src="${p.image}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <p class="price">$${p.price}</p>
+      ${products.map(p => {
 
-          <button onclick="event.stopPropagation(); addToCart(${p.product_id})">
-            Add to Cart
-          </button>
-        </div>
-      `).join("")}
+        // 🔥 HANDLE BOTH POSSIBLE COLUMN NAMES
+        const id = p.product_id || p.id;
+        const image = p.image || p.img;
+
+        return `
+          <div class="card" onclick="openProduct(${id})">
+            <img src="${image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p class="price">$${p.price}</p>
+
+            <button onclick="event.stopPropagation(); addToCart(${id})">
+              Add to Cart
+            </button>
+          </div>
+        `;
+      }).join("")}
     </div>
   `;
 }
 
-// OPEN PRODUCT
+// 🔗 OPEN PRODUCT
 function openProduct(id){
   localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-// ADD TO CART
+// 🛒 CART
 function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
