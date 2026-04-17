@@ -134,10 +134,9 @@ h1 { text-align: center; }
 </div>
 
 <!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ✅ SUPABASE CONFIG
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
@@ -145,7 +144,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let products = [];
 
-// ✅ LOAD PRODUCTS FROM DB
+// LOAD PRODUCTS
 async function loadProducts(){
   const { data, error } = await supabase
     .from("products")
@@ -157,14 +156,14 @@ async function loadProducts(){
   }
 
   products = data;
-  loadCart(); // load cart AFTER products
+  loadCart();
 }
 
-// ✅ LOAD CART
+// LOAD CART
 function loadCart(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  cart = cart.filter(item => item.product_id && item.qty > 0);
+  cart = cart.filter(item => item.id && item.qty > 0);   // ✅ FIXED
   localStorage.setItem("cart", JSON.stringify(cart));
 
   let container = document.getElementById("cartItems");
@@ -178,7 +177,7 @@ function loadCart(){
   }
 
   cart.forEach(item => {
-    let product = products.find(p => p.product_id == item.product_id);
+    let product = products.find(p => p.id == item.id);   // ✅ FIXED
     if(!product) return;
 
     let qty = Number(item.qty) || 1;
@@ -194,10 +193,10 @@ function loadCart(){
         </div>
 
         <div class="item-controls">
-          <button class="qty-btn" onclick="changeQty(${item.product_id}, -1)">-</button>
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
           <span>${qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.product_id}, 1)">+</button>
-          <button class="remove-btn" onclick="removeItem(${item.product_id})">✕</button>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+          <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
         </div>
 
         <div style="margin-left:10px;">$${total}</div>
@@ -211,19 +210,19 @@ function loadCart(){
   updateCartCount();
 }
 
-// ✅ UPDATE COUNT
+// UPDATE COUNT
 function updateCartCount(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   let count = cart.reduce((sum,i)=> sum + (Number(i.qty)||1),0);
   document.getElementById("cartCount").innerText = count;
 }
 
-// ✅ CHANGE QTY
-function changeQty(product_id, delta){
+// CHANGE QTY
+function changeQty(id, delta){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart = cart.map(item => {
-    if(item.product_id == product_id){
+    if(item.id == id){                 // ✅ FIXED
       item.qty += delta;
       if(item.qty < 1) item.qty = 1;
     }
@@ -234,10 +233,10 @@ function changeQty(product_id, delta){
   loadCart();
 }
 
-// ✅ REMOVE
-function removeItem(product_id){
+// REMOVE
+function removeItem(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart = cart.filter(item => item.product_id != product_id);
+  cart = cart.filter(item => item.id != id);   // ✅ FIXED
 
   localStorage.setItem("cart", JSON.stringify(cart));
   loadCart();
