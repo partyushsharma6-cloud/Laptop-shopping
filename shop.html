@@ -38,53 +38,74 @@
   <p>© 2026 LuxLap. Premium Experience.</p>
 </footer>
 
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 <script>
+// ✅ Supabase config
+const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ✅ Load products from database
+async function loadProducts() {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*");
 
-function renderProducts(){
-let container=document.getElementById("products");
+  if (error) {
+    console.error("Error loading products:", error);
+    return;
+  }
 
-container.innerHTML = `
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
-${products.map(p=>`
-<div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
-  <img src="${p.img}">
-  <div class="card-content">
-    <h3>${p.name}</h3>
-    <p class="price">$${p.price}</p>
-    <button onclick="event.stopPropagation(); addToCart(${p.id})">Add to Cart</button>
-  </div>
-</div>
-`).join("")}
-</div>
-`;
+  renderProducts(data);
 }
 
-// ✅ OPEN PRODUCT PAGE
+// ✅ Render products
+function renderProducts(products){
+  let container = document.getElementById("products");
+
+  container.innerHTML = `
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
+    ${products.map(p=>`
+      <div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
+        <img src="${p.image}">
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <p class="price">$${p.price}</p>
+          <button onclick="event.stopPropagation(); addToCart(${p.id})">Add to Cart</button>
+        </div>
+      </div>
+    `).join("")}
+  </div>
+  `;
+}
+
+// ✅ Open product page
 function openProduct(id){
-  console.log("Clicked:", id); // DEBUG
   localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-// CART
+// ✅ Cart
 function addToCart(id){
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
-let item=cart.find(i=>i.id===id);
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-if(item){
-  item.qty++;
-} else {
-  cart.push({id,qty:1});
+  let item = cart.find(i => i.id === id);
+
+  if(item){
+    item.qty++;
+  } else {
+    cart.push({id, qty:1});
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to Cart");
 }
 
-localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to Cart");
-}
-
-renderProducts();
-
+// ✅ Init
+loadProducts();
 </script>
 
 </body>
