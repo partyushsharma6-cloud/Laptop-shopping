@@ -51,6 +51,12 @@
       cursor: pointer;
     }
 
+    .center-msg {
+      text-align: center;
+      padding: 80px;
+      font-size: 20px;
+    }
+
     @media(max-width:768px){
       .product-container {
         grid-template-columns: 1fr;
@@ -74,7 +80,7 @@
 </header>
 
 <section class="container">
-  <div id="productDetail"></div>
+  <div id="productDetail" class="center-msg">Loading product...</div>
 </section>
 
 <footer class="footer">
@@ -84,22 +90,23 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// ================= SETUP =================
+// ✅ SUPABASE SETUP
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ================= GET PRODUCT ID =================
-const product_id = Number(localStorage.getItem("selectedProduct"));
+// ✅ GET PRODUCT ID (SAFE)
+const product_id = parseInt(localStorage.getItem("selectedProduct"));
+
 console.log("Selected Product ID:", product_id);
 
-// ================= LOAD PRODUCT =================
+// ✅ LOAD PRODUCT
 async function loadProduct() {
   const container = document.getElementById("productDetail");
 
-  if (!product_id) {
-    container.innerHTML = "<h2 style='text-align:center;'>No product selected</h2>";
+  if (!product_id || isNaN(product_id)) {
+    container.innerHTML = "<div class='center-msg'>No product selected</div>";
     return;
   }
 
@@ -107,15 +114,17 @@ async function loadProduct() {
     .from("products")
     .select("*")
     .eq("product_id", product_id)
-    .maybeSingle();
+    .single(); // 🔥 important
 
   console.log("DATA:", data);
   console.log("ERROR:", error);
 
-  if (!data) {
-    container.innerHTML = "<h2 style='text-align:center;'>Product not found</h2>";
+  if (error || !data) {
+    container.innerHTML = "<div class='center-msg'>Product not found</div>";
     return;
   }
+
+  container.classList.remove("center-msg");
 
   container.innerHTML = `
     <div class="product-container">
@@ -123,7 +132,7 @@ async function loadProduct() {
       
       <div class="product-info">
         <h1>${data.name}</h1>
-        <h2>₹${data.price}</h2>
+        <h2>$${data.price}</h2>
 
         <p>Premium performance laptop with high-end build quality.</p>
 
@@ -140,7 +149,7 @@ async function loadProduct() {
   `;
 }
 
-// ================= CART =================
+// ✅ ADD TO CART (CONSISTENT)
 function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -153,7 +162,7 @@ function addToCart(product_id){
   alert("Added to Cart");
 }
 
-// ================= INIT =================
+// ✅ INIT
 loadProduct();
 </script>
 
