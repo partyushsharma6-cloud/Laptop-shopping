@@ -35,21 +35,21 @@
   <div id="product" class="center">Loading product...</div>
 </div>
 
-<!-- ONLY ONE SUPABASE SCRIPT -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-// 🔥 ONLY ONE CLIENT (IMPORTANT)
-const supabase = window.supabase.createClient(
+// ✅ use DIFFERENT name to avoid duplicate conflict
+const sb = window.supabase.createClient(
   "https://xopxvrmmzanowgpyvolv.supabase.co",
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
 
-// ✅ GET ID
+// GET ID
 const id = parseInt(localStorage.getItem("selectedProduct"));
-console.log("ID:", id);
+console.log("Selected ID:", id);
 
-// ✅ LOAD
+// LOAD PRODUCT
 async function load(){
   const container = document.getElementById("product");
 
@@ -58,13 +58,14 @@ async function load(){
     return;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from("products")
     .select("*")
     .eq("product_id", id)
     .single();
 
-  console.log(data, error);
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
   if(error || !data){
     container.innerHTML = "Product not found";
@@ -75,18 +76,18 @@ async function load(){
 
   container.innerHTML = `
     <div class="product">
-      <img src="${data.image}">
+      <img src="${data.image}" alt="${data.name}">
       <div>
         <h1>${data.name}</h1>
         <h2>$${data.price}</h2>
-        <button onclick="add(${data.product_id})">Add to Cart</button>
+        <button onclick="addToCart(${data.product_id})">Add to Cart</button>
       </div>
     </div>
   `;
 }
 
 // CART
-function add(product_id){
+function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   let item = cart.find(i => i.product_id === product_id);
 
@@ -94,9 +95,10 @@ function add(product_id){
   else cart.push({ product_id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Added");
+  alert("Added to cart");
 }
 
+// INIT
 load();
 </script>
 
