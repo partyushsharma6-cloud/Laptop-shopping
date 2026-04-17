@@ -8,7 +8,6 @@
   <style>
     body { font-family: Poppins, sans-serif; margin:0; }
 
-    /* NAVBAR */
     .navbar {
       display:flex;
       justify-content:space-between;
@@ -57,7 +56,6 @@
 
 <body>
 
-<!-- ✅ NAVBAR -->
 <div class="navbar">
   <div class="logo">LuxLap</div>
   <div class="nav-links">
@@ -72,10 +70,9 @@
 </div>
 
 <!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ⚠️ IMPORTANT: use UNIQUE variable name
 const db = window.supabase.createClient(
   "https://xopxvrmmzanowgpyvolv.supabase.co",
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
@@ -97,7 +94,7 @@ async function load(){
   const { data, error } = await db
     .from("products")
     .select("*")
-    .eq("product_id", id)
+    .eq("id", id)          // ✅ FIXED
     .single();
 
   console.log("DATA:", data);
@@ -116,19 +113,20 @@ async function load(){
       <div>
         <h1>${data.name}</h1>
         <h2>$${data.price}</h2>
-        <button onclick="addToCart(${data.product_id})">Add to Cart</button>
+        <button onclick="addToCart(${data.id})">Add to Cart</button>
       </div>
     </div>
   `;
 }
 
-// CART
-function addToCart(product_id){
+// CART (FIXED)
+function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let item = cart.find(i => i.product_id === product_id);
+
+  let item = cart.find(i => i.id === id);   // ✅ FIXED
 
   if(item) item.qty++;
-  else cart.push({ product_id, qty:1 });
+  else cart.push({ id, qty:1 });           // ✅ FIXED
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
