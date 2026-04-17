@@ -183,8 +183,8 @@ function renderProducts(products) {
   container.innerHTML = `
     <div class="grid">
       ${products.map(p => {
-        const id = p.product_id || p.id;
-        const image = p.image || p.img;
+        const id = p.id;          // ✅ FIXED
+        const image = p.image;
 
         return `
           <div class="card" onclick="openProduct(${id})">
@@ -207,14 +207,14 @@ function openProduct(id){
   window.location.href = "product.html";
 }
 
-// CART
-function addToCart(product_id){
+// CART (FIXED)
+function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.product_id === product_id);
+  let item = cart.find(i => i.id === id);   // ✅ FIXED
 
   if(item) item.qty++;
-  else cart.push({ product_id, qty:1 });
+  else cart.push({ id, qty:1 });           // ✅ FIXED
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
