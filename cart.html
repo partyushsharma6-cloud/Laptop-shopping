@@ -13,13 +13,11 @@ body {
   color: #eee;
 }
 
-/* NAVBAR */
 .navbar {
   display: flex;
   justify-content: space-between;
   padding: 15px 40px;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
 }
 .logo { font-size: 20px; }
 
@@ -28,6 +26,7 @@ body {
   margin-left: 20px;
   text-decoration: none;
 }
+
 .cart-count {
   background: gold;
   color: black;
@@ -35,7 +34,6 @@ body {
   border-radius: 10px;
 }
 
-/* LAYOUT */
 .container { width: 90%; margin: auto; }
 h1 { text-align: center; }
 
@@ -53,6 +51,7 @@ h1 { text-align: center; }
   border-radius: 12px;
   margin-bottom: 15px;
 }
+
 .cart-item img { width: 90px; }
 
 .item-info { flex: 1; margin-left: 15px; }
@@ -61,6 +60,7 @@ h1 { text-align: center; }
   display: flex;
   gap: 10px;
 }
+
 .qty-btn {
   background: #222;
   color: white;
@@ -68,6 +68,7 @@ h1 { text-align: center; }
   padding: 5px 10px;
   cursor: pointer;
 }
+
 .remove-btn {
   color: red;
   border: none;
@@ -75,31 +76,23 @@ h1 { text-align: center; }
   cursor: pointer;
 }
 
-/* SUMMARY */
 .cart-summary {
   background: rgba(255,255,255,0.05);
   padding: 20px;
   border-radius: 12px;
 }
+
 .summary-row, .summary-total {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
 }
+
 .summary-total {
   border-top: 1px solid #444;
   padding-top: 10px;
 }
 
-.checkout-btn {
-  width: 100%;
-  padding: 12px;
-  background: gold;
-  border: none;
-  margin-top: 20px;
-}
-
-/* EMPTY */
 .hidden { display: none; }
 .empty { text-align: center; margin-top: 80px; }
 </style>
@@ -124,33 +117,54 @@ h1 { text-align: center; }
 </div>
 
 <div class="cart-layout">
-<div id="cartItems"></div>
+  <div id="cartItems"></div>
 
-<div class="cart-summary">
-  <h2>Summary</h2>
-  <div class="summary-row">
-    <span>Subtotal</span>
-    <span id="subtotal">$0</span>
+  <div class="cart-summary">
+    <h2>Summary</h2>
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span id="subtotal">$0</span>
+    </div>
+    <div class="summary-total">
+      <span>Total</span>
+      <span id="total">$0</span>
+    </div>
   </div>
-  <div class="summary-total">
-    <span>Total</span>
-    <span id="total">$0</span>
-  </div>
 </div>
 </div>
-</div>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
+// ✅ SUPABASE CONFIG
+const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
-// 🔥 FULL 10 PRODUCTS (MUST MATCH SHOP PAGE)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+let products = [];
 
-// LOAD CART
+// ✅ LOAD PRODUCTS FROM DB
+async function loadProducts(){
+  const { data, error } = await supabase
+    .from("products")
+    .select("*");
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  products = data;
+  loadCart(); // load cart AFTER products
+}
+
+// ✅ LOAD CART
 function loadCart(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // ✅ CLEAN INVALID DATA
-  cart = cart.filter(item => item.id && item.qty > 0);
+  cart = cart.filter(item => item.product_id && item.qty > 0);
   localStorage.setItem("cart", JSON.stringify(cart));
 
   let container = document.getElementById("cartItems");
@@ -164,7 +178,7 @@ function loadCart(){
   }
 
   cart.forEach(item => {
-    let product = products.find(p => p.id == item.id);
+    let product = products.find(p => p.product_id == item.product_id);
     if(!product) return;
 
     let qty = Number(item.qty) || 1;
@@ -173,17 +187,17 @@ function loadCart(){
 
     container.innerHTML += `
       <div class="cart-item">
-        <img src="${product.img}">
+        <img src="${product.image}">
         <div class="item-info">
           <h3>${product.name}</h3>
           <p>$${product.price}</p>
         </div>
 
         <div class="item-controls">
-          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+          <button class="qty-btn" onclick="changeQty(${item.product_id}, -1)">-</button>
           <span>${qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-          <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
+          <button class="qty-btn" onclick="changeQty(${item.product_id}, 1)">+</button>
+          <button class="remove-btn" onclick="removeItem(${item.product_id})">✕</button>
         </div>
 
         <div style="margin-left:10px;">$${total}</div>
@@ -197,20 +211,19 @@ function loadCart(){
   updateCartCount();
 }
 
-// CART COUNT
+// ✅ UPDATE COUNT
 function updateCartCount(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   let count = cart.reduce((sum,i)=> sum + (Number(i.qty)||1),0);
   document.getElementById("cartCount").innerText = count;
 }
 
-// CHANGE QTY (UNLIMITED)
-function changeQty(id, delta){
+// ✅ CHANGE QTY
+function changeQty(product_id, delta){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart = cart.map(item => {
-    if(item.id == id){
-      item.qty = Number(item.qty) || 1;
+    if(item.product_id == product_id){
       item.qty += delta;
       if(item.qty < 1) item.qty = 1;
     }
@@ -221,18 +234,17 @@ function changeQty(id, delta){
   loadCart();
 }
 
-// REMOVE
-function removeItem(id){
+// ✅ REMOVE
+function removeItem(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart = cart.filter(item => item.id != id);
+  cart = cart.filter(item => item.product_id != product_id);
 
   localStorage.setItem("cart", JSON.stringify(cart));
   loadCart();
 }
 
 // INIT
-loadCart();
-
+loadProducts();
 </script>
 
 </body>
