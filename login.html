@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | LuxLap</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -22,7 +21,6 @@
       width: 100%;
     }
 
-    /* Left Side (Branding) */
     .login-left {
       flex: 1;
       background: url('https://source.unsplash.com/1000x1000/?luxury,laptop') no-repeat center/cover;
@@ -53,7 +51,6 @@
       max-width: 400px;
     }
 
-    /* Right Side (Form) */
     .login-right {
       flex: 1;
       display: flex;
@@ -121,7 +118,6 @@
       text-decoration: none;
     }
 
-    /* Responsive */
     @media(max-width:900px){
       .login-left {
         display: none;
@@ -150,8 +146,9 @@
     <form class="login-box" onsubmit="login(event)">
       <h2>Welcome Back</h2>
 
-      <input type="email" placeholder="Enter Email" required>
-      <input type="password" placeholder="Enter Password" required>
+      <!-- ✅ IDs ADDED -->
+      <input id="email" type="email" placeholder="Enter Email" required>
+      <input id="password" type="password" placeholder="Enter Password" required>
 
       <button type="submit">Login</button>
 
@@ -163,6 +160,10 @@
 
 </div>
 
+<!-- ✅ SUPABASE FIRST -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ✅ YOUR SCRIPT -->
 <script src="script.js"></script>
 
 </body>
