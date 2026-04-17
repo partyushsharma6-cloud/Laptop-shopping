@@ -1,4 +1,4 @@
-// ✅ Supabase Setup (ONLY here, nowhere else)
+// ✅ Supabase Setup (ONLY here)
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
@@ -6,6 +6,8 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 🌐 Global products
 let products = [];
+
+// ================= PRODUCTS =================
 
 // 🚀 Load products
 async function loadProducts() {
@@ -62,7 +64,8 @@ function openProduct(id){
   window.location.href = "product.html";
 }
 
-// 🛒 Cart
+// ================= CART =================
+
 function addToCart(id) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -78,7 +81,7 @@ function addToCart(id) {
   showToast("Added to cart");
 }
 
-// 🔔 Toast notification
+// 🔔 Toast
 function showToast(msg) {
   let toast = document.createElement("div");
   toast.innerText = msg;
@@ -95,6 +98,56 @@ function showToast(msg) {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2000);
 }
+
+// ================= AUTH =================
+
+// 🔐 LOGIN
+window.login = async function(event){
+  event.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Login successful");
+  window.location.href = "index.html";
+};
+
+// 📝 REGISTER
+window.register = async function(event){
+  event.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name: name
+      }
+    }
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Account created. Now login.");
+  window.location.href = "login.html";
+};
 
 // 🚀 INIT
 document.addEventListener("DOMContentLoaded", loadProducts);
