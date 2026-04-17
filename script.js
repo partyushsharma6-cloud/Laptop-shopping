@@ -13,12 +13,18 @@ async function loadProducts() {
     .from("products")
     .select("*");
 
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
   if (error) {
-    console.error("Supabase error:", error);
+    document.getElementById("products").innerHTML = "Error loading products";
     return;
   }
 
-  console.log("DATA:", data);
+  if (!data || data.length === 0) {
+    document.getElementById("products").innerHTML = "No products found";
+    return;
+  }
 
   products = data;
   renderProducts();
@@ -30,12 +36,12 @@ function renderProducts() {
   if (!container) return;
 
   container.innerHTML = products.map(p => `
-    <div class="card" onclick="openProduct(${p.product_id})" style="cursor:pointer;">
+    <div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
       <img src="${p.image}" alt="${p.name}">
       <div class="card-content">
         <h3>${p.name}</h3>
         <p class="price">$${p.price}</p>
-        <button onclick="event.stopPropagation(); addToCart(${p.product_id})">
+        <button onclick="event.stopPropagation(); addToCart(${p.id})">
           Add to Cart
         </button>
       </div>
@@ -44,20 +50,21 @@ function renderProducts() {
 }
 
 // 🔗 Open product page
-function openProduct(product_id){
-  localStorage.setItem("selectedProduct", product_id);
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
 // 🛒 Cart
-function addToCart(product_id) {
+function addToCart(id) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let item = cart.find(i => i.product_id === product_id);
+
+  let item = cart.find(i => i.id === id);
 
   if (item) {
     item.qty++;
   } else {
-    cart.push({ product_id: product_id, qty: 1 });
+    cart.push({ id: id, qty: 1 });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
