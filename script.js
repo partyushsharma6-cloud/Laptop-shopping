@@ -1,4 +1,4 @@
-// ✅ Supabase Setup
+// ✅ Supabase Setup (ONLY here, nowhere else)
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
@@ -9,6 +9,9 @@ let products = [];
 
 // 🚀 Load products
 async function loadProducts() {
+  const container = document.getElementById("products");
+  if (!container) return;
+
   const { data, error } = await supabase
     .from("products")
     .select("*");
@@ -17,12 +20,12 @@ async function loadProducts() {
   console.log("ERROR:", error);
 
   if (error) {
-    document.getElementById("products").innerHTML = "Error loading products";
+    container.innerHTML = "Error loading products";
     return;
   }
 
   if (!data || data.length === 0) {
-    document.getElementById("products").innerHTML = "No products found";
+    container.innerHTML = "No products found";
     return;
   }
 
@@ -35,18 +38,22 @@ function renderProducts() {
   const container = document.getElementById("products");
   if (!container) return;
 
-  container.innerHTML = products.map(p => `
-    <div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
-      <img src="${p.image}" alt="${p.name}">
-      <div class="card-content">
-        <h3>${p.name}</h3>
-        <p class="price">$${p.price}</p>
-        <button onclick="event.stopPropagation(); addToCart(${p.id})">
-          Add to Cart
-        </button>
-      </div>
+  container.innerHTML = `
+    <div class="grid">
+      ${products.map(p => `
+        <div class="card" onclick="openProduct(${p.id})">
+          <img src="${p.image}" alt="${p.name}">
+          <div class="card-content">
+            <h3>${p.name}</h3>
+            <p class="price">$${p.price}</p>
+            <button onclick="event.stopPropagation(); addToCart(${p.id})">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join("")}
     </div>
-  `).join("");
+  `;
 }
 
 // 🔗 Open product page
@@ -90,4 +97,4 @@ function showToast(msg) {
 }
 
 // 🚀 INIT
-loadProducts();
+document.addEventListener("DOMContentLoaded", loadProducts);
