@@ -54,7 +54,6 @@
       cursor: pointer;
     }
 
-    /* MOBILE */
     @media(max-width:768px){
       .product-container {
         grid-template-columns: 1fr;
@@ -88,65 +87,78 @@
   <p>© 2026 LuxLap • Premium Laptop Store</p>
 </footer>
 
-<!-- JS -->
+<!-- ✅ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 <script>
+// ✅ Supabase Setup
+const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
-// SAME PRODUCTS AS SHOP (IMPORTANT)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-
-// GET SELECTED PRODUCT
+// 🔥 GET SELECTED PRODUCT ID
 const id = localStorage.getItem("selectedProduct");
-const product = products.find(p => p.id == id);
 
-const container = document.getElementById("productDetail");
+// 🚀 LOAD PRODUCT FROM DATABASE
+async function loadProduct() {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-// IF PRODUCT FOUND
-if(product){
-container.innerHTML = `
-<div class="product-container">
+  const container = document.getElementById("productDetail");
 
-  <img src="${product.img}">
+  if (error || !data) {
+    container.innerHTML = "<h2 style='text-align:center;'>Product not found</h2>";
+    console.error(error);
+    return;
+  }
 
-  <div class="product-info">
-    <h1>${product.name}</h1>
-    <h2>₹${product.price}</h2>
+  // ✅ RENDER PRODUCT
+  container.innerHTML = `
+    <div class="product-container">
 
-    <p>
-      Experience premium performance with cutting-edge technology,
-      sleek design, and long-lasting durability.
-    </p>
+      <img src="${data.image}">
 
-    <ul>
-      <li>✔ High-speed processor</li>
-      <li>✔ Premium metal build</li>
-      <li>✔ Long battery backup</li>
-      <li>✔ Ultra-slim & lightweight</li>
-    </ul>
+      <div class="product-info">
+        <h1>${data.name}</h1>
+        <h2>₹${data.price}</h2>
 
-    <button onclick="addToCart(${product.id})">Add to Cart</button>
-  </div>
+        <p>
+          Experience premium performance with cutting-edge technology,
+          sleek design, and long-lasting durability.
+        </p>
 
-</div>
-`;
-} else {
-container.innerHTML = "<h2 style='text-align:center;'>Product not found</h2>";
+        <ul>
+          <li>✔ High-speed processor</li>
+          <li>✔ Premium metal build</li>
+          <li>✔ Long battery backup</li>
+          <li>✔ Ultra-slim & lightweight</li>
+        </ul>
+
+        <button onclick="addToCart(${data.id})">Add to Cart</button>
+      </div>
+
+    </div>
+  `;
 }
 
-// ADD TO CART
+// 🛒 CART
 function addToCart(id){
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
-let item=cart.find(i=>i.id===id);
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let item = cart.find(i => i.id === id);
 
-if(item){
-  item.qty++;
-} else {
-  cart.push({id,qty:1});
+  if(item) item.qty++;
+  else cart.push({id, qty:1});
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to Cart");
 }
 
-localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to Cart");
-}
-
+// 🚀 INIT
+loadProduct();
 </script>
 
 </body>
