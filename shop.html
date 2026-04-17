@@ -48,14 +48,14 @@ const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ✅ Load products from database
+// ✅ Load products
 async function loadProducts() {
   const { data, error } = await supabaseClient
     .from("products")
     .select("*");
 
   if (error) {
-    console.error("Error loading products:", error);
+    console.error("Supabase error:", error);
     return;
   }
 
@@ -69,12 +69,14 @@ function renderProducts(products){
   container.innerHTML = `
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
     ${products.map(p=>`
-      <div class="card" onclick="openProduct(${p.id})" style="cursor:pointer;">
-        <img src="${p.image}">
+      <div class="card" onclick="openProduct(${p.product_id})" style="cursor:pointer;">
+        <img src="${p.image}" alt="${p.name}">
         <div class="card-content">
           <h3>${p.name}</h3>
           <p class="price">$${p.price}</p>
-          <button onclick="event.stopPropagation(); addToCart(${p.id})">Add to Cart</button>
+          <button onclick="event.stopPropagation(); addToCart(${p.product_id})">
+            Add to Cart
+          </button>
         </div>
       </div>
     `).join("")}
@@ -83,21 +85,21 @@ function renderProducts(products){
 }
 
 // ✅ Open product page
-function openProduct(id){
-  localStorage.setItem("selectedProduct", id.toString()); // 🔥 force string
+function openProduct(product_id){
+  localStorage.setItem("selectedProduct", product_id);
   window.location.href = "product.html";
 }
 
-// ✅ Cart
-function addToCart(id){
+// ✅ Add to cart (FIXED STRUCTURE)
+function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.id === id);
+  let item = cart.find(i => i.product_id === product_id);
 
   if(item){
     item.qty++;
   } else {
-    cart.push({id, qty:1});
+    cart.push({ product_id, qty:1 });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
