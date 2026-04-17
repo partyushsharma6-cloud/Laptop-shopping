@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LuxLap | Premium Laptops</title>
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -17,13 +14,8 @@
       width: 100%;
       top: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0);
       backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-
-    .nav-links a { color: #eee; }
-    .nav-links a:hover { color: #c9a45c; }
 
     .nav-wrapper {
       display: flex;
@@ -36,95 +28,40 @@
       font-size: 22px;
       font-weight: 600;
       color: #c9a45c;
-      letter-spacing: 2px;
     }
 
     .nav-links a {
       margin: 0 15px;
       text-decoration: none;
-      font-weight: 500;
-    }
-
-    .btn-nav {
-      padding: 8px 18px;
-      border-radius: 20px;
-      background: linear-gradient(45deg, gold, #c9a45c);
-      color: #000 !important;
-      font-weight: 600;
+      color: #eee;
     }
 
     .hero {
       height: 100vh;
-      background: url('https://images.unsplash.com/photo-1773332598451-8a0a59941912?q=80&w=687&auto=format&fit=crop') no-repeat center/cover;
+      background: url('https://images.unsplash.com/photo-1773332598451-8a0a59941912?q=80&w=687&auto=format&fit=crop') center/cover;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .hero-content { color: #fff; text-align: center; }
-    .hero h1 { font-size: 60px; }
-
-    .btn-primary {
-      padding: 12px 30px;
-      border-radius: 30px;
-      background: linear-gradient(45deg, gold, #c9a45c);
-      color: #000;
-      text-decoration: none;
-    }
+    .hero-content { color: white; text-align: center; }
 
     .section-title {
       text-align: center;
-      margin-bottom: 40px;
-      font-size: 32px;
+      margin: 40px 0;
     }
 
-    .category-card {
-      padding: 40px;
-      text-align: center;
-      border-radius: 15px;
+    .card {
       background: #fff;
-      transition: 0.3s;
-    }
-
-    .category-card:hover {
-      transform: translateY(-10px);
-    }
-
-    .banner {
-      margin: 80px 0;
-      padding: 100px 20px;
-      text-align: center;
-      background: linear-gradient(to right,#f8f5ef,#fff);
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      background: #fff;
-      color: #777;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 28px;
+      padding: 15px;
+      border-radius: 10px;
       cursor: pointer;
-      color: #c9a45c;
+      text-align: center;
     }
 
-    @media screen and (max-width: 768px) {
-      .nav-links {
-        position: absolute;
-        top: 70px;
-        right: 0;
-        background: rgba(0,0,0,0.95);
-        width: 200px;
-        flex-direction: column;
-        display: none;
-        padding: 20px;
-      }
-
-      .nav-links.active { display: flex; }
-      .menu-toggle { display: block; }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -135,98 +72,86 @@
   <div class="nav-wrapper">
     <div class="logo">LuxLap</div>
 
-    <nav class="nav-links" id="navLinks">
+    <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="shop.html">Shop</a>
       <a href="cart.html">Cart</a>
-      <a href="login.html">Login</a>
-      <a href="register.html" class="btn-nav">Register</a>
     </nav>
-
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </div>
 </header>
 
 <section class="hero">
   <div class="hero-content">
     <h1>Redefining Luxury Computing</h1>
-    <p>Experience power, elegance, and precision</p>
-    <a href="shop.html" class="btn-primary">Explore Collection</a>
+    <a href="shop.html">Explore</a>
   </div>
 </section>
 
-<section style="padding:80px 20px;">
-  <h2 class="section-title">Categories</h2>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
-    <div class="category-card">Gaming</div>
-    <div class="category-card">Business</div>
-    <div class="category-card">Student</div>
-    <div class="category-card">Premium</div>
-  </div>
-</section>
-
-<section class="products">
+<section>
   <h2 class="section-title">Featured Laptops</h2>
   <div id="products"></div>
 </section>
 
-<section class="banner">
-  <h2>Crafted for Professionals</h2>
-  <p>Ultra performance. Ultra design. Ultra luxury.</p>
-</section>
-
-<footer>
-  <p>© 2026 LuxLap</p>
+<footer style="text-align:center;padding:20px;">
+  © 2026 LuxLap
 </footer>
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
-const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
-
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
 // LOAD PRODUCTS
 async function loadProducts() {
-  const { data, error } = await supabaseClient
+  const { data, error } = await supabase
     .from("products")
     .select("*");
 
   if (error) {
-    console.error("Supabase error:", error);
+    console.error(error);
+    document.getElementById("products").innerHTML = "Error loading products";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    document.getElementById("products").innerHTML = "No products found";
     return;
   }
 
   renderProducts(data);
 }
 
-// RENDER PRODUCTS
+// RENDER
 function renderProducts(products) {
   const container = document.getElementById("products");
 
   container.innerHTML = `
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;">
-    ${products.map(p => `
-      <div class="card" onclick="openProduct(${p.product_id})">
-        <img src="${p.image}" alt="${p.name}">
-        <h3>${p.name}</h3>
-        <p>$${p.price}</p>
-        <button onclick="event.stopPropagation(); addToCart(${p.product_id})">Add</button>
-      </div>
-    `).join("")}
-  </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+      ${products.map(p => `
+        <div class="card" onclick="openProduct(${p.product_id})">
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+          <p>$${p.price}</p>
+          <button onclick="event.stopPropagation(); addToCart(${p.product_id})">
+            Add
+          </button>
+        </div>
+      `).join("")}
+    </div>
   `;
 }
 
 // OPEN PRODUCT
-function openProduct(product_id){
-  localStorage.setItem("selectedProduct", product_id);
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-// ADD TO CART (FIXED STRUCTURE)
+// CART
 function addToCart(product_id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -237,11 +162,6 @@ function addToCart(product_id){
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
-}
-
-// MOBILE MENU
-function toggleMenu(){
-  document.getElementById("navLinks").classList.toggle("active");
 }
 
 // INIT
