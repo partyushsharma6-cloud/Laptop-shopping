@@ -1,14 +1,13 @@
-const supabase = window.supabase.createClient(
-  "https://xopxvrmmzanowgpyvolv.supabase.co",
-  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-);
+// ✅ Supabase Setup
+const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🌐 Global products (from DB)
+// 🌐 Global products
 let products = [];
 
-// 🚀 Load products from Supabase
+// 🚀 Load products
 async function loadProducts() {
   const { data, error } = await supabase
     .from("products")
@@ -19,13 +18,15 @@ async function loadProducts() {
     return;
   }
 
-  products = data; // store globally
+  console.log("DATA:", data); // 🔍 DEBUG
+
+  products = data;
   renderProducts();
 }
 
-// 🖥️ Render products
+// 🖥️ Render
 function renderProducts() {
-  let container = document.getElementById("products");
+  const container = document.getElementById("products");
   if (!container) return;
 
   container.innerHTML = products.map(p => `
@@ -40,48 +41,16 @@ function renderProducts() {
   `).join("");
 }
 
-// 🛒 Add to cart
+// 🛒 Cart
 function addToCart(id) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   let item = cart.find(i => i.id === id);
 
-  if (item) {
-    item.qty++;
-  } else {
-    cart.push({ id, qty: 1 });
-  }
+  if (item) item.qty++;
+  else cart.push({ id, qty: 1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   showToast("Added to cart");
-  loadCart(); // update UI
-}
-
-// 🧾 Load cart
-function loadCart() {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let container = document.getElementById("cart-items");
-  let total = 0;
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  cart.forEach(c => {
-    let product = products.find(p => p.id === c.id);
-    if (!product) return;
-
-    total += product.price * c.qty;
-
-    container.innerHTML += `
-      <div class="cart-item">
-        ${product.name} x${c.qty}
-        <span>$${product.price * c.qty}</span>
-      </div>
-    `;
-  });
-
-  let totalEl = document.getElementById("total");
-  if (totalEl) totalEl.innerText = "Total: $" + total;
 }
 
 // 🔔 Toast
@@ -99,17 +68,5 @@ function showToast(msg) {
   setTimeout(() => toast.remove(), 2000);
 }
 
-// 🔐 Forms
-function login(e) {
-  e.preventDefault();
-  alert("Login successful");
-}
-
-function register(e) {
-  e.preventDefault();
-  alert("Registered successfully");
-}
-
 // 🚀 INIT
 loadProducts();
-setTimeout(loadCart, 500); // wait for products to load
