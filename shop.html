@@ -79,81 +79,80 @@ button {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ✅ Supabase (ONLY HERE)
-const supabase = window.supabase.createClient(
-  "https://xopxvrmmzanowgpyvolv.supabase.co",
-  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-);
+document.addEventListener("DOMContentLoaded", () => {
 
-// LOAD PRODUCTS
-async function loadProducts() {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*");
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  if (error) {
-    document.getElementById("products").innerHTML = "Error loading products";
+  if (!window.supabase) {
+    document.getElementById("products").innerHTML = "Supabase failed to load";
     return;
   }
 
-  if (!data || data.length === 0) {
-    document.getElementById("products").innerHTML = "No products found";
-    return;
+  const supabase = window.supabase.createClient(
+    "https://xopxvrmmzanowgpyvolv.supabase.co",
+    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+  );
+
+  async function loadProducts() {
+    const container = document.getElementById("products");
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("*");
+
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+
+    if (error) {
+      container.innerHTML = "Error loading products";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      container.innerHTML = "No products found";
+      return;
+    }
+
+    renderProducts(data);
   }
 
-  renderProducts(data);
-}
+  function renderProducts(products){
+    const container = document.getElementById("products");
 
-// RENDER
-function renderProducts(products){
-  const container = document.getElementById("products");
-
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
-      ${products.map(p => {
-        const id = p.id;
-        const image = p.image;
-
-        return `
-          <div class="card" onclick="openProduct(${id})">
-            <img src="${image}" alt="${p.name}">
+    container.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        ${products.map(p => `
+          <div class="card" onclick="openProduct(${p.id})">
+            <img src="${p.image}" alt="${p.name}">
             <h3>${p.name}</h3>
             <p class="price">$${p.price}</p>
 
-            <button onclick="event.stopPropagation(); addToCart(${id})">
+            <button onclick="event.stopPropagation(); addToCart(${p.id})">
               Add to Cart
             </button>
           </div>
-        `;
-      }).join("")}
-    </div>
-  `;
-}
+        `).join("")}
+      </div>
+    `;
+  }
 
-// OPEN PRODUCT
-function openProduct(id){
-  localStorage.setItem("selectedProduct", id);
-  window.location.href = "product.html";
-}
+  window.openProduct = function(id){
+    localStorage.setItem("selectedProduct", id);
+    window.location.href = "product.html";
+  }
 
-// CART
-function addToCart(id){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  window.addToCart = function(id){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.id === id);
+    let item = cart.find(i => i.id === id);
 
-  if(item) item.qty++;
-  else cart.push({ id, qty:1 });
+    if(item) item.qty++;
+    else cart.push({ id, qty:1 });
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Added to Cart");
-}
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to Cart");
+  }
 
-// INIT
-loadProducts();
+  loadProducts();
+});
 </script>
 
 </body>
