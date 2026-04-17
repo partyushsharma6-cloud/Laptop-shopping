@@ -84,7 +84,7 @@ function renderProducts(products){
 
 // ✅ Open product page
 function openProduct(id){
-  localStorage.setItem("selectedProduct", id);
+  localStorage.setItem("selectedProduct", id.toString()); // 🔥 force string
   window.location.href = "product.html";
 }
 
