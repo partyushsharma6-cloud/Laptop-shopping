@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | LuxLap</title>
+
+<style>
+body {
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:#0f0f0f;
+  color:#fff;
+}
+
+/* NAVBAR */
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  padding:15px 40px;
+  background:rgba(0,0,0,0.6);
+}
+
+.nav-links a {
+  color:#ccc;
+  margin-left:20px;
+  text-decoration:none;
+}
+
+.container {
+  text-align:center;
+  margin-top:100px;
+}
+
+button {
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  background:gold;
+  border-radius:20px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div>LuxLap</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="container">
+  <h1>My Profile</h1>
+  <p id="email">Loading...</p>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+<script>
+// LOAD USER
+async function loadUser(){
+  const { data } = await supabase.auth.getUser();
+
+  if(!data.user){
+    // not logged in → go login
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("email").innerText = data.user.email;
+}
+
+loadUser();
+</script>
+
+</body>
+</html>
