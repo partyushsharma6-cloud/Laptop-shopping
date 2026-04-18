@@ -143,7 +143,7 @@
 
   <!-- RIGHT SIDE -->
   <div class="login-right">
-    <form class="login-box" onsubmit="login(event)">
+    <form class="login-box" id="loginForm">
       <h2>Welcome Back</h2>
 
       <input id="email" type="email" placeholder="Enter Email" required>
@@ -159,20 +159,23 @@
 
 </div>
 
-<!-- ✅ IMPORTANT: ONLY LOAD ONCE -->
+<!-- ✅ LOAD SUPABASE ONLY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-/* 🚫 PREVENT DOUBLE DECLARATION CRASH */
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    "https://xopxvrmmzanowgpyvolv.supabase.co",
-    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-  );
-}
-</script>
-
+<!-- ✅ YOUR MAIN SCRIPT -->
 <script src="script.js"></script>
+
+<!-- ✅ SAFE LOGIN HANDLER -->
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  if (window.login) {
+    window.login(e);
+  } else {
+    e.preventDefault();
+    alert("Login system not loaded properly");
+  }
+});
+</script>
 
 </body>
 </html>
