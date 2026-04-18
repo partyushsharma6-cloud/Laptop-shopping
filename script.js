@@ -1,26 +1,17 @@
-// ✅ Supabase Setup (ONLY here — do NOT repeat anywhere else)
+// ✅ Supabase Setup (ONLY HERE)
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🌐 Global products
+// ================= PRODUCTS =================
 let products = [];
 
-
-// ================= PRODUCTS =================
-
-// 🚀 Load products
 async function loadProducts() {
   const container = document.getElementById("products");
   if (!container) return;
 
-  const { data, error } = await supabase
-    .from("products")
-    .select("*");
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+  const { data, error } = await supabase.from("products").select("*");
 
   if (error) {
     container.innerHTML = "Error loading products";
@@ -36,7 +27,6 @@ async function loadProducts() {
   renderProducts();
 }
 
-// 🖥️ Render products
 function renderProducts() {
   const container = document.getElementById("products");
   if (!container) return;
@@ -45,73 +35,69 @@ function renderProducts() {
     <div class="grid">
       ${products.map(p => `
         <div class="card" onclick="openProduct(${p.id})">
-          <img src="${p.image}" alt="${p.name}">
-          <div class="card-content">
-            <h3>${p.name}</h3>
-            <p class="price">$${p.price}</p>
-            <button onclick="event.stopPropagation(); addToCart(${p.id})">
-              Add to Cart
-            </button>
-          </div>
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+          <p class="price">$${p.price}</p>
+          <button onclick="event.stopPropagation(); addToCart(${p.id})">
+            Add to Cart
+          </button>
         </div>
       `).join("")}
     </div>
   `;
 }
 
-// 🔗 Open product page
 function openProduct(id){
   localStorage.setItem("selectedProduct", id);
   window.location.href = "product.html";
 }
 
-
 // ================= CART =================
-
-function addToCart(id) {
+function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   let item = cart.find(i => i.id === id);
 
-  if (item) {
-    item.qty++;
-  } else {
-    cart.push({ id: id, qty: 1 });
-  }
+  if(item) item.qty++;
+  else cart.push({ id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-  showToast("Added to cart");
+  alert("Added to cart");
 }
-
-// 🔔 Toast
-function showToast(msg) {
-  let toast = document.createElement("div");
-  toast.innerText = msg;
-
-  toast.style.position = "fixed";
-  toast.style.bottom = "20px";
-  toast.style.right = "20px";
-  toast.style.background = "#111";
-  toast.style.color = "#fff";
-  toast.style.padding = "10px 20px";
-  toast.style.borderRadius = "8px";
-  toast.style.zIndex = "9999";
-
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2000);
-}
-
 
 // ================= AUTH =================
 
-// 🔐 LOGIN
-window.login = async function(event){
-  event.preventDefault();
+// REGISTER
+window.register = async function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { name } }
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Account created. Now login.");
+  window.location.href = "login.html";
+};
+
+// LOGIN
+window.login = async function(e){
+  e.preventDefault();
 
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password
   });
@@ -122,51 +108,8 @@ window.login = async function(event){
   }
 
   alert("Login successful");
-  window.location.href = "profile.html"; // ✅ go to profile
-};
-
-
-// 📝 REGISTER
-window.register = async function(event){
-  event.preventDefault();
-
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { name }
-    }
-  });
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  alert("Account created! Please login.");
-  window.location.href = "login.html";
-};
-
-
-// 🚪 LOGOUT
-window.logout = async function(){
-  await supabase.auth.signOut();
   window.location.href = "index.html";
 };
 
-
-// 👤 CHECK USER (for profile page or navbar)
-async function getCurrentUser(){
-  const { data } = await supabase.auth.getUser();
-  return data.user;
-}
-
-
-// 🚀 INIT (safe)
-document.addEventListener("DOMContentLoaded", () => {
-  loadProducts();
-});
+// INIT
+document.addEventListener("DOMContentLoaded", loadProducts);
