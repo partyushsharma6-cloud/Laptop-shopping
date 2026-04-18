@@ -60,7 +60,7 @@ button {
   <button onclick="logout()">Logout</button>
 </div>
 
-<!-- ✅ ONLY THIS (NO script.js here) -->
+<!-- ✅ ONLY THIS SCRIPT (NO script.js HERE) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -69,7 +69,7 @@ const supabase = window.supabase.createClient(
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
 
-// LOAD USER
+// ✅ LOAD USER
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
 
@@ -81,11 +81,11 @@ async function loadUser(){
   document.getElementById("email").innerText = data.user.email;
 }
 
-// LOGOUT
-async function logout(){
+// ✅ MAKE FUNCTION GLOBAL (IMPORTANT FIX)
+window.logout = async function(){
   await supabase.auth.signOut();
   window.location.href = "login.html";
-}
+};
 
 // INIT
 loadUser();
