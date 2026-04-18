@@ -146,7 +146,6 @@
     <form class="login-box" onsubmit="login(event)">
       <h2>Welcome Back</h2>
 
-      <!-- ✅ IMPORTANT: IDs must match script.js -->
       <input id="email" type="email" placeholder="Enter Email" required>
       <input id="password" type="password" placeholder="Enter Password" required>
 
@@ -160,8 +159,19 @@
 
 </div>
 
-<!-- ✅ LOAD ORDER (DO NOT CHANGE) -->
+<!-- ✅ IMPORTANT: ONLY LOAD ONCE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* 🚫 PREVENT DOUBLE DECLARATION CRASH */
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    "https://xopxvrmmzanowgpyvolv.supabase.co",
+    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+  );
+}
+</script>
+
 <script src="script.js"></script>
 
 </body>
