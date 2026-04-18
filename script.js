@@ -1,4 +1,3 @@
-// ✅ SAFE SUPABASE INIT (NO DUPLICATE ERROR)
 if (!window.supabaseClient) {
   window.supabaseClient = window.supabase.createClient(
     "https://xopxvrmmzanowgpyvolv.supabase.co",
