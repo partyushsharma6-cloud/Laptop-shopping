@@ -13,7 +13,6 @@ body {
   color:#fff;
 }
 
-/* NAVBAR */
 .navbar {
   display:flex;
   justify-content:space-between;
@@ -45,7 +44,6 @@ button {
 
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
   <div>LuxLap</div>
   <div class="nav-links">
@@ -55,7 +53,6 @@ button {
   </div>
 </div>
 
-<!-- PROFILE -->
 <div class="container">
   <h1>My Profile</h1>
   <p id="email">Loading...</p>
@@ -63,26 +60,20 @@ button {
   <button onclick="logout()">Logout</button>
 </div>
 
-<!-- SUPABASE -->
+<!-- ✅ ONLY THIS (NO script.js here) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ✅ SAFE GLOBAL CLIENT (NO DUPLICATE)
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    "https://xopxvrmmzanowgpyvolv.supabase.co",
-    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-  );
-}
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
-const supabase = window.supabaseClient;
-
-// ================= LOAD USER =================
+// LOAD USER
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
 
   if(!data.user){
-    // not logged in → go login
     window.location.href = "login.html";
     return;
   }
@@ -90,11 +81,9 @@ async function loadUser(){
   document.getElementById("email").innerText = data.user.email;
 }
 
-// ================= LOGOUT =================
+// LOGOUT
 async function logout(){
   await supabase.auth.signOut();
-
-  alert("Logged out");
   window.location.href = "login.html";
 }
 
