@@ -148,83 +148,79 @@ button {
   <div id="products">Loading...</div>
 </section>
 
-<!-- SUPABASE -->
+<!-- ✅ SUPABASE LOAD ONLY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
-  if (!window.supabase) {
-    document.getElementById("products").innerHTML = "Supabase failed to load";
+// LOAD PRODUCTS
+async function loadProducts() {
+  const container = document.getElementById("products");
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*");
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
+  if (error) {
+    container.innerHTML = "Error loading products";
     return;
   }
 
-  const supabase = window.supabase.createClient(
-    "https://xopxvrmmzanowgpyvolv.supabase.co",
-    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-  );
-
-  async function loadProducts() {
-    const container = document.getElementById("products");
-
-    const { data, error } = await supabase
-      .from("products")
-      .select("*");
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-
-    if (error) {
-      container.innerHTML = "Error loading products";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      container.innerHTML = "No products";
-      return;
-    }
-
-    renderProducts(data);
+  if (!data || data.length === 0) {
+    container.innerHTML = "No products";
+    return;
   }
 
-  function renderProducts(products) {
-    const container = document.getElementById("products");
+  renderProducts(data);
+}
 
-    container.innerHTML = `
-      <div class="grid">
-        ${products.map(p => `
-          <div class="card" onclick="openProduct(${p.id})">
-            <img src="${p.image}">
-            <h3>${p.name}</h3>
-            <p class="price">$${p.price}</p>
-            <button onclick="event.stopPropagation(); addToCart(${p.id})">
-              Add
-            </button>
-          </div>
-        `).join("")}
-      </div>
-    `;
-  }
+// RENDER
+function renderProducts(products) {
+  const container = document.getElementById("products");
 
-  window.openProduct = function(id){
-    localStorage.setItem("selectedProduct", id);
-    window.location.href = "product.html";
-  }
+  container.innerHTML = `
+    <div class="grid">
+      ${products.map(p => `
+        <div class="card" onclick="openProduct(${p.id})">
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+          <p class="price">$${p.price}</p>
+          <button onclick="event.stopPropagation(); addToCart(${p.id})">
+            Add
+          </button>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
 
-  window.addToCart = function(id){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// GLOBAL FUNCTIONS
+function openProduct(id){
+  localStorage.setItem("selectedProduct", id);
+  window.location.href = "product.html";
+}
 
-    let item = cart.find(i => i.id === id);
+function addToCart(id){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    if(item) item.qty++;
-    else cart.push({ id, qty:1 });
+  let item = cart.find(i => i.id === id);
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart");
-  }
+  if(item) item.qty++;
+  else cart.push({ id, qty:1 });
 
-  loadProducts();
-});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to cart");
+}
+
+// INIT
+loadProducts();
 </script>
 
 </body>
