@@ -136,113 +136,115 @@ h1 { text-align: center; }
 </div>
 </div>
 
+<!-- ✅ ONLY LOAD SUPABASE (NO DUPLICATE INIT ISSUE HERE) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const supabase = window.supabase.createClient(
+  "https://xopxvrmmzanowgpyvolv.supabase.co",
+  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+);
 
-  const supabase = window.supabase.createClient(
-    "https://xopxvrmmzanowgpyvolv.supabase.co",
-    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-  );
+let products = [];
 
-  let products = [];
+// LOAD PRODUCTS
+async function loadProducts(){
+  const { data, error } = await supabase.from("products").select("*");
 
-  async function loadProducts(){
-    const { data, error } = await supabase
-      .from("products")
-      .select("*");
-
-    if(error){
-      console.error(error);
-      return;
-    }
-
-    products = data || [];
-    loadCart();
+  if(error){
+    console.error(error);
+    return;
   }
 
-  function loadCart(){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  products = data || [];
+  loadCart();
+}
 
-    cart = cart.filter(item => item.id && item.qty > 0);
-    localStorage.setItem("cart", JSON.stringify(cart));
+// LOAD CART
+function loadCart(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    let container = document.getElementById("cartItems");
-    let subtotal = 0;
-    container.innerHTML = "";
+  cart = cart.filter(item => item.id && item.qty > 0);
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-    if(cart.length === 0){
-      document.getElementById("empty").classList.remove("hidden");
-      document.getElementById("cartCount").innerText = 0;
-      return;
-    }
+  let container = document.getElementById("cartItems");
+  let subtotal = 0;
+  container.innerHTML = "";
 
-    cart.forEach(item => {
-      let product = products.find(p => p.id == item.id);
-      if(!product) return;
-
-      let qty = Number(item.qty) || 1;
-      let total = product.price * qty;
-      subtotal += total;
-
-      container.innerHTML += `
-        <div class="cart-item">
-          <img src="${product.image}">
-          <div class="item-info">
-            <h3>${product.name}</h3>
-            <p>$${product.price}</p>
-          </div>
-
-          <div class="item-controls">
-            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
-            <span>${qty}</span>
-            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-            <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
-          </div>
-
-          <div style="margin-left:10px;">$${total}</div>
-        </div>
-      `;
-    });
-
-    document.getElementById("subtotal").innerText = "$" + subtotal;
-    document.getElementById("total").innerText = "$" + subtotal;
-
+  if(cart.length === 0){
+    document.getElementById("empty").classList.remove("hidden");
     updateCartCount();
+    return;
   }
 
-  window.updateCartCount = function(){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let count = cart.reduce((sum,i)=> sum + (Number(i.qty)||1),0);
-    document.getElementById("cartCount").innerText = count;
-  }
+  cart.forEach(item => {
+    let product = products.find(p => p.id == item.id);
+    if(!product) return;
 
-  window.changeQty = function(id, delta){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let qty = item.qty;
+    let total = product.price * qty;
+    subtotal += total;
 
-    cart = cart.map(item => {
-      if(item.id == id){
-        item.qty += delta;
-        if(item.qty < 1) item.qty = 1;
-      }
-      return item;
-    });
+    container.innerHTML += `
+      <div class="cart-item">
+        <img src="${product.image}">
+        <div class="item-info">
+          <h3>${product.name}</h3>
+          <p>$${product.price}</p>
+        </div>
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCart();
-  }
+        <div class="item-controls">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+          <span>${qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+          <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
+        </div>
 
-  window.removeItem = function(id){
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart = cart.filter(item => item.id != id);
+        <div style="margin-left:10px;">$${total}</div>
+      </div>
+    `;
+  });
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCart();
-  }
+  document.getElementById("subtotal").innerText = "$" + subtotal;
+  document.getElementById("total").innerText = "$" + subtotal;
 
-  loadProducts();
-});
+  updateCartCount();
+}
+
+// UPDATE COUNT
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let count = cart.reduce((sum,i)=> sum + i.qty,0);
+  document.getElementById("cartCount").innerText = count;
+}
+
+// CHANGE QTY
+function changeQty(id, delta){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart = cart.map(item => {
+    if(item.id == id){
+      item.qty += delta;
+      if(item.qty < 1) item.qty = 1;
+    }
+    return item;
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// REMOVE ITEM
+function removeItem(id){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart = cart.filter(item => item.id != id);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// INIT
+loadProducts();
 </script>
 
 </body>
