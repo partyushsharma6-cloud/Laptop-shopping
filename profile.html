@@ -65,10 +65,19 @@ button {
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
 
 <script>
-// LOAD USER
+// ✅ SAFE GLOBAL CLIENT (NO DUPLICATE)
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    "https://xopxvrmmzanowgpyvolv.supabase.co",
+    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+  );
+}
+
+const supabase = window.supabaseClient;
+
+// ================= LOAD USER =================
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
 
@@ -81,6 +90,15 @@ async function loadUser(){
   document.getElementById("email").innerText = data.user.email;
 }
 
+// ================= LOGOUT =================
+async function logout(){
+  await supabase.auth.signOut();
+
+  alert("Logged out");
+  window.location.href = "login.html";
+}
+
+// INIT
 loadUser();
 </script>
 
