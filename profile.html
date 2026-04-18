@@ -57,10 +57,11 @@ button {
   <h1>My Profile</h1>
   <p id="email">Loading...</p>
 
-  <button onclick="logout()">Logout</button>
+  <!-- ✅ FIX: no onclick -->
+  <button id="logoutBtn">Logout</button>
 </div>
 
-<!-- SUPABASE -->
+<!-- ✅ ONLY ONE SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -69,7 +70,7 @@ const supabase = window.supabase.createClient(
   "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
 );
 
-// ✅ FIX: USE SESSION (NOT getUser directly)
+// LOAD USER
 async function loadUser(){
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -78,16 +79,14 @@ async function loadUser(){
     return;
   }
 
-  const user = session.user;
-
-  document.getElementById("email").innerText = user.email;
+  document.getElementById("email").innerText = session.user.email;
 }
 
-// ✅ LOGOUT
-window.logout = async function(){
+// LOGOUT BUTTON FIX
+document.getElementById("logoutBtn").addEventListener("click", async () => {
   await supabase.auth.signOut();
   window.location.href = "login.html";
-};
+});
 
 // INIT
 loadUser();
