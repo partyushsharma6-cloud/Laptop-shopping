@@ -84,27 +84,26 @@ button {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (!window.supabase) {
-    document.getElementById("products").innerHTML = "Supabase failed to load";
-    return;
+  const container = document.getElementById("products");
+
+  // ✅ SAFE INIT (NO DUPLICATE ERROR EVER)
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
+      "https://xopxvrmmzanowgpyvolv.supabase.co",
+      "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+    );
   }
 
-  const supabase = window.supabase.createClient(
-    "https://xopxvrmmzanowgpyvolv.supabase.co",
-    "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-  );
+  const supabase = window.supabaseClient;
 
   async function loadProducts() {
-    const container = document.getElementById("products");
 
     const { data, error } = await supabase
       .from("products")
       .select("*");
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-
     if (error) {
+      console.error(error);
       container.innerHTML = "Error loading products";
       return;
     }
@@ -118,8 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderProducts(products){
-    const container = document.getElementById("products");
-
     container.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
         ${products.map(p => `
@@ -137,10 +134,11 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  // GLOBAL FUNCTIONS
   window.openProduct = function(id){
     localStorage.setItem("selectedProduct", id);
     window.location.href = "product.html";
-  }
+  };
 
   window.addToCart = function(id){
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -152,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Added to Cart");
-  }
+  };
 
   loadProducts();
 });
