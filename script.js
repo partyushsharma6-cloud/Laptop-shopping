@@ -1,4 +1,4 @@
-// ✅ Supabase Setup (ONLY here)
+// ✅ Supabase Setup (ONLY here — do NOT repeat anywhere else)
 const SUPABASE_URL = "https://xopxvrmmzanowgpyvolv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP";
 
@@ -6,6 +6,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 🌐 Global products
 let products = [];
+
 
 // ================= PRODUCTS =================
 
@@ -64,6 +65,7 @@ function openProduct(id){
   window.location.href = "product.html";
 }
 
+
 // ================= CART =================
 
 function addToCart(id) {
@@ -99,6 +101,7 @@ function showToast(msg) {
   setTimeout(() => toast.remove(), 2000);
 }
 
+
 // ================= AUTH =================
 
 // 🔐 LOGIN
@@ -119,8 +122,9 @@ window.login = async function(event){
   }
 
   alert("Login successful");
-  window.location.href = "index.html";
+  window.location.href = "profile.html"; // ✅ go to profile
 };
+
 
 // 📝 REGISTER
 window.register = async function(event){
@@ -134,9 +138,7 @@ window.register = async function(event){
     email,
     password,
     options: {
-      data: {
-        name: name
-      }
+      data: { name }
     }
   });
 
@@ -145,9 +147,26 @@ window.register = async function(event){
     return;
   }
 
-  alert("Account created. Now login.");
+  alert("Account created! Please login.");
   window.location.href = "login.html";
 };
 
-// 🚀 INIT
-document.addEventListener("DOMContentLoaded", loadProducts);
+
+// 🚪 LOGOUT
+window.logout = async function(){
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+};
+
+
+// 👤 CHECK USER (for profile page or navbar)
+async function getCurrentUser(){
+  const { data } = await supabase.auth.getUser();
+  return data.user;
+}
+
+
+// 🚀 INIT (safe)
+document.addEventListener("DOMContentLoaded", () => {
+  loadProducts();
+});
