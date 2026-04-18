@@ -72,38 +72,41 @@
   <div id="product" class="center">Loading product...</div>
 </div>
 
-<!-- SUPABASE -->
+<!-- ✅ SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const db = window.supabase.createClient(
-  "https://xopxvrmmzanowgpyvolv.supabase.co",
-  "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
-);
+document.addEventListener("DOMContentLoaded", async () => {
 
-// GET ID
-const id = parseInt(localStorage.getItem("selectedProduct"));
-console.log("Selected ID:", id);
+  // ✅ SAFE INIT (NO DUPLICATE ERROR)
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
+      "https://xopxvrmmzanowgpyvolv.supabase.co",
+      "sb_publishable_iODXIxkPjoMOMXel01oFDg_5Q7IvoQP"
+    );
+  }
 
-// LOAD PRODUCT
-async function load(){
+  const supabase = window.supabaseClient;
+
   const container = document.getElementById("product");
+
+  // GET PRODUCT ID
+  const id = parseInt(localStorage.getItem("selectedProduct"));
 
   if(!id || isNaN(id)){
     container.innerHTML = "No product selected";
     return;
   }
 
-  const { data, error } = await db
+  // LOAD PRODUCT
+  const { data, error } = await supabase
     .from("products")
     .select("*")
-    .eq("id", id)          // ✅ FIXED
+    .eq("id", id)
     .single();
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
   if(error || !data){
+    console.error(error);
     container.innerHTML = "Product not found";
     return;
   }
@@ -120,23 +123,21 @@ async function load(){
       </div>
     </div>
   `;
-}
 
-// CART (FIXED)
+});
+
+// ✅ CART (GLOBAL)
 function addToCart(id){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  let item = cart.find(i => i.id === id);   // ✅ FIXED
+  let item = cart.find(i => i.id === id);
 
   if(item) item.qty++;
-  else cart.push({ id, qty:1 });           // ✅ FIXED
+  else cart.push({ id, qty:1 });
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert("Added to cart");
 }
-
-// INIT
-load();
 </script>
 
 </body>
