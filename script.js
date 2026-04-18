@@ -1,3 +1,4 @@
+// ✅ GLOBAL SAFE INIT (NO CRASH EVEN IF LOADED TWICE)
 if (!window.supabaseClient) {
   window.supabaseClient = window.supabase.createClient(
     "https://xopxvrmmzanowgpyvolv.supabase.co",
@@ -5,7 +6,8 @@ if (!window.supabaseClient) {
   );
 }
 
-const supabase = window.supabaseClient;
+// ✅ DO NOT USE const (IMPORTANT)
+var supabase = window.supabaseClient;
 
 // ================= PRODUCTS =================
 let products = [];
